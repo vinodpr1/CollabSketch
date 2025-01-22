@@ -11,6 +11,7 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/common": "workspace:*",
     "@types/nodemon": "^1.19.6",
     "nodemon": "^3.1.9"
   },

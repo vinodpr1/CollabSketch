@@ -1,10 +1,9 @@
 import { UserServices } from "../services";
-
 const userServices = new UserServices();
 
 export const SignUp = async (req: any, res: any) => {
     try {
-        const data = req.body;
+        const data = req.body;  
         const user = await userServices.SignUp(data); 
         res.status(200).json({
             message: "signup successfully",
