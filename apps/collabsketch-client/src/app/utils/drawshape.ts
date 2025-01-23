@@ -55,10 +55,15 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string, socket:WebSock
         const rect = canvas.getBoundingClientRect();
         
         // socket logic to send messages to the backend server;
+        console.log("Hello from my side brooohhh");
         socket.send("Jay ma samay ji");
         socket.onmessage=(event)=>{
             console.log("Hii", event.data);
         }
+
+        // socket logic to send messages to the backend server;
+
+
 
         if(shape=="rect"){
             existingShape.push({type:"rect", startX:startX, startY: startY, width: width, height: height });
