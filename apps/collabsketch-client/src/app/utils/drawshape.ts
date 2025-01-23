@@ -33,7 +33,7 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
     let height:number=0;
     let width:number=0;
     let clicked: boolean = false;
-   
+    let pencilPath: { x: number; y: number }[] = [];
 
     canvas.addEventListener("mousedown",(event:MouseEvent)=>{
         clicked=true;
@@ -44,6 +44,7 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
 
     canvas.addEventListener("mouseup",(event:MouseEvent)=>{
         clicked=false;
+        pencilPath=[];
         const rect = canvas.getBoundingClientRect();
         if(shape=="rect"){
             existingShape.push({type:"rect", startX:startX, startY: startY, width: width, height: height });
@@ -83,8 +84,21 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
             ctx.lineTo( event.clientX-rect.left, event.clientY-rect.top );
             ctx.strokeStyle= "white";
             ctx.stroke();
+        }else{
+            const currentX = event.clientX - rect.left;
+            const currentY = event.clientY - rect.top;  
+            pencilPath.push({x:currentX, y:currentY});
+
+            ctx.beginPath();
+            ctx.strokeStyle= "white";
+
+            for(let i=1 ; i<pencilPath.length; i++){
+                ctx.moveTo( pencilPath[i-1].x, pencilPath[i-1].y );
+                ctx.lineTo( pencilPath[i].x, pencilPath[i].y  );
+                console.log("#33");
+            }
+            ctx.stroke();
         }
-        
       }
    });
    
