@@ -103,7 +103,7 @@ function Landing() {
                             Create beautiful hand-drawn like diagrams, wireframes, and illustrations with our intuitive drawing tool.
                         </p>
                         <div className="flex justify-center space-x-4">
-                            <Link href="/draw">
+                            <Link href="/draw/12345">
                               <button className="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg flex items-center space-x-2 transition-colors">
                                 <span>Start Drawing</span>
                                 <ChevronRight className="w-5 h-5" />

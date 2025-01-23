@@ -28,11 +28,9 @@
 
 const existingShape:ExistingShape[] = [];
 
-export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
+export const drawShape = (canvas:HTMLCanvasElement, shape:string, socket:WebSocket) =>{
     const ctx = canvas.getContext("2d");
     if(!ctx) return;
-   
-    console.log("Shape name is", shape);
   
     ctx.fillStyle= "rgba(0, 0, 0)"
     ctx.fillRect(0,0,canvas.width, canvas.height);
@@ -55,6 +53,13 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
         clicked=false;
         pencilPath=[];
         const rect = canvas.getBoundingClientRect();
+        
+        // socket logic to send messages to the backend server;
+        socket.send("Jay ma samay ji");
+        socket.onmessage=(event)=>{
+            console.log("Hii", event.data);
+        }
+
         if(shape=="rect"){
             existingShape.push({type:"rect", startX:startX, startY: startY, width: width, height: height });
         }else if(shape=="arc"){
@@ -111,9 +116,9 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
             ctx.stroke();
         }
       }
+
    });
    
-
 }
 
 
