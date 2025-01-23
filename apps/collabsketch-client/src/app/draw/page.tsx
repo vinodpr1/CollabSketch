@@ -6,7 +6,7 @@ import { drawShape } from '../utils/drawshape';
 const page = () => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [shape, setShape] = useState<string>("pencil");
+    const [shape, setShape] = useState<string>("arc");
 
     useEffect(()=>{
         if(canvasRef.current){
@@ -17,15 +17,15 @@ const page = () => {
 
   return (
     <div>
-         <div className='p-4 flex gap-2'>
+         {/* <div className='p-4 flex gap-2'>
            <button onClick={()=>setShape("rect")} className='px-2 py-1 bg-gray-500 rounded'>Rect</button>
            <button onClick={()=>setShape("arc")} className='px-2 py-1 bg-gray-500 rounded'>Arc</button>
            <button onClick={()=>setShape("line")} className='px-2 py-1 bg-gray-500 rounded'>Line</button>
-         </div>
+         </div> */}
         <canvas
           ref={canvasRef}
-          height={700}
-          width={1380}
+          height={580}
+          width={1180}
           className='rgba(0, 0, 0)'
         />
     </div>

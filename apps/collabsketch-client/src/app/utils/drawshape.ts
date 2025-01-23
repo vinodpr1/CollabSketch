@@ -1,3 +1,9 @@
+ 
+ interface Pencil{
+    x: number,
+    y: number
+ }
+
  type ExistingShape = | {
        type:"rect",
        startX: number,
@@ -15,6 +21,9 @@
         startY: number,
         moveX: number,
         moveY: number
+    } | {
+        type:"pencil",
+        path: any;
     };
 
 const existingShape:ExistingShape[] = [];
@@ -33,7 +42,7 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
     let height:number=0;
     let width:number=0;
     let clicked: boolean = false;
-    let pencilPath: { x: number; y: number }[] = [];
+    let pencilPath: Pencil[] = [];
 
     canvas.addEventListener("mousedown",(event:MouseEvent)=>{
         clicked=true;
@@ -53,8 +62,10 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string) =>{
             existingShape.push({type:"arc", startX:startX, startY: startY, radius: radius });
         }else if(shape=="line"){
             existingShape.push({type:"line", startX:startX, startY: startY, moveX: event.clientX-rect.left, moveY: event.clientY-rect.top });
+        }else if(shape=="pencil"){
+            existingShape.push({type:"pencil", path:pencilPath});
         }
-    })
+    });
 
     canvas.addEventListener("mousemove",(event:MouseEvent)=>{
       
@@ -123,6 +134,17 @@ const drawShapesBeforeClear=(ctx:CanvasRenderingContext2D , canvas:HTMLCanvasEle
             ctx.lineTo( shape.moveX, shape.moveY );
             ctx.strokeStyle= "white";
             ctx.stroke();
+        }else{
+            ctx.beginPath();
+            ctx.strokeStyle= "white";
+
+            for(let i=1 ; i<shape.path.length; i++){
+                ctx.moveTo( shape.path[i-1].x, shape.path[i-1].y );
+                ctx.lineTo( shape.path[i].x, shape.path[i].y  );
+                console.log("#33");
+            }
+            ctx.stroke();
+            console.log(existingShape);
         }
     })
 
