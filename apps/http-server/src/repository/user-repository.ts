@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import {prismaClient} from "@repo/db/prismaclient"
+import { NotFoundError, UnauthorizeError } from "../errorhandlers/client-error";
 
 class UserRepository{
     constructor(){}
@@ -27,7 +28,7 @@ class UserRepository{
             }
             const isMatchpassword = bcrypt.compareSync(data.password, user.password);
             if(!isMatchpassword){
-                throw new UnauthorizedError("Password does't matched");
+                throw new UnauthorizeError("Password does't matched");
             }
             const jwtToken = jwt.sign({ id: user?.id }, "vinodpr");
             return  jwtToken;
