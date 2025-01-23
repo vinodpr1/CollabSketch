@@ -2,11 +2,14 @@
 import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import { drawShape } from '../utils/drawshape';
+import useSocket from '../hooks/useSocket';
 
 const page = () => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [shape, setShape] = useState<string>("arc");
+    const {loading, socket} = useSocket();
+   
 
     useEffect(()=>{
         if(canvasRef.current){
