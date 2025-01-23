@@ -3,7 +3,6 @@ const userRepository = new UserRepository();
 
 class UserServices{
     constructor(){}
-
     async SignUp(data:any){
        try {
           const response = await userRepository.SignUp(data);
