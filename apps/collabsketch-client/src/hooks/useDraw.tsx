@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-export type Tool = 'select' | 'pencil' | 'rectangle' | 'ellipse' | 'text' | 'eraser' | 'undo' | 'redo'
+export type Tool = 'select' | 'pencil' | 'rectangle' | 'ellipse' | 'line' | 'text' | 'eraser' | 'undo' | 'redo'
 
 
 export const useDraw=()=>{

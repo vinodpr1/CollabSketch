@@ -9,21 +9,19 @@ const Canvas = ({socket}:{socket: WebSocket}) => {
      const { changeTool, tool } = useDraw();
     
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [shape, setShape] = useState<string>("pencil");
   
     useEffect(()=>{
         if(canvasRef.current){
           const canvas = canvasRef.current;
-          drawShape(canvas, shape, socket);
+          drawShape(canvas, tool, socket);
         }
-    },[canvasRef]);
+    },[canvasRef, tool]);
 
   return (
     <div className='absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]'>
         <Toolbar  
            setTool={changeTool}
         />
-        <h1 className='mx-[200px]'>{tool}</h1>
         <canvas
           ref={canvasRef}
           height={580}

@@ -1,4 +1,4 @@
-import { MousePointer2, Pencil, Square, Circle, Type, Eraser, Undo2, Redo2 } from 'lucide-react'
+import { MousePointer2, Pencil, Square, Circle, MoveUpRight, Type, Eraser, Undo2, Redo2 } from 'lucide-react'
 import { Tool } from '@/hooks/useDraw';
 
 interface ToolProps {
@@ -12,6 +12,7 @@ const Toolbar = ({ setTool }: ToolProps) => {
         { id: "pencil" as Tool, icon: Pencil },
         { id: "rectangle" as Tool, icon: Square },
         { id: "ellipse" as Tool, icon: Circle },
+        { id: "line" as Tool, icon: MoveUpRight },
         { id: "text" as Tool, icon: Type },
         { id: "eraser" as Tool, icon: Eraser },
         { id: "undo" as Tool, icon: Undo2 },
