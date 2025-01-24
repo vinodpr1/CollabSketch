@@ -3,25 +3,39 @@ import { drawShape } from '@/utils/drawshape';
 import React, { useEffect, useRef, useState } from 'react'
 import Toolbar from './Toolbar';
 import { useDraw } from '@/hooks/useDraw';
+import Filterbar from './Filterbar';
 
 const Canvas = ({socket}:{socket: WebSocket}) => {
 
-     const { changeTool, tool } = useDraw();
+     const { changeTool, tool, color, changeColor, size, changeSize, stroke, changeStroke } = useDraw();
     
     const canvasRef = useRef<HTMLCanvasElement>(null);
   
     useEffect(()=>{
         if(canvasRef.current){
           const canvas = canvasRef.current;
-          drawShape(canvas, tool, socket);
+          drawShape(canvas, tool, color, stroke, socket);
         }
-    },[canvasRef, tool]);
+    },[canvasRef, tool, color, stroke]);
 
   return (
     <div className='absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]'>
+       
+          
+<h1 className='mx-12'> color  {color} size {size} stroke {stroke}</h1>
+
         <Toolbar  
            setTool={changeTool}
         />
+        <Filterbar
+          color={color}
+          setColor={changeColor}
+          size={size}
+          setSize={changeSize}
+          stroke={stroke}
+          setStroke={changeStroke}
+        />
+     
         <canvas
           ref={canvasRef}
           height={580}

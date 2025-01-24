@@ -1,4 +1,4 @@
-import { Tool } from "@/hooks/useDraw";
+import { Color, Stroke, Tool } from "@/hooks/useDraw";
 
  
  interface Pencil{
@@ -30,7 +30,7 @@ import { Tool } from "@/hooks/useDraw";
 
 const existingShape:ExistingShape[] = [];
 
-export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, socket:WebSocket) =>{
+export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, color:Color, stroke: Stroke, socket:WebSocket) =>{
     const ctx = canvas.getContext("2d");
     if(!ctx) return;
   
@@ -65,7 +65,6 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, socket:WebSocket)
         }
         // socket logic to send messages to the backend server;
 
-
         if(tool=="rectangle"){
             existingShape.push({type:"rect", startX:startX, startY: startY, width: width, height: height });
         }else if(tool=="ellipse"){
@@ -92,7 +91,8 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, socket:WebSocket)
         drawShapesBeforeClear(ctx, canvas, existingShape);
 
         if(tool=="rectangle"){
-            ctx.strokeStyle= "black";
+            ctx.lineWidth = stroke;
+            ctx.strokeStyle = color;
             ctx.strokeRect(startX, startY, width, height);
         }else if(tool=="ellipse"){
             const radius = Math.sqrt(width ** 2 + height ** 2);
@@ -112,7 +112,7 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, socket:WebSocket)
             pencilPath.push({x:currentX, y:currentY});
 
             ctx.beginPath();
-            ctx.strokeStyle= "black";
+            ctx.strokeStyle= color;
 
             for(let i=1 ; i<pencilPath.length; i++){
                 ctx.moveTo( pencilPath[i-1].x, pencilPath[i-1].y );
