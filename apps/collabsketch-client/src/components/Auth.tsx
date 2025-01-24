@@ -1,23 +1,37 @@
+"use client"
 import React, { useState } from 'react';
 import { Moon, Sun, Mail, Lock, User } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import {HTTP_BACKEND_URL} from "@repo/common/HTTP_BACKEND_URL";
 
 function Auth({comp}:{comp:string}) {
-  const [isLogin, setIsLogin] = useState(true);
-    
+
+    const router = useRouter();
+   const [userData, setUserData] = useState({
+                                  name:"",
+                                  email:"",
+                                  password:""
+                               })
+     
+ 
+     const handleSubmit = async ()=>{
+        const response = await axios.post(`${HTTP_BACKEND_URL}/user/${comp == "signin"? "signin" : "signup"}`, userData);
+        if(response.data){
+          console.log(response);
+          localStorage.setItem("token", response.data.token);
+          router.push("/draw/123")
+        };
+     }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Toggle Container */}
         <div className="bg-white rounded shadow-xl overflow-hidden">
-          {/* Toggle Header */}
-          <div className="relative h-16 bg-gradient-to-r from-indigo-500 to-purple-600">
-            <div 
-              className={`absolute inset-0 flex transition-transform duration-500 ease-in-out ${
-                comp =="signin" ? 'translate-x-0' : 'translate-x-full'
-              }`}
-            >
-            </div>
+  
+          <div className="relative h-12 bg-gradient-to-r from-indigo-500 to-purple-600">
           </div>
 
           {/* Form Container */}
@@ -27,6 +41,7 @@ function Auth({comp}:{comp:string}) {
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
+                    onChange={(e)=>setUserData({...userData, name: e.target.value})}
                     type="text"
                     placeholder="Full Name"
                     className="w-full pl-12 pr-4 py-3 border border-gray-200 outline-none bg-gray-50 rounded transition-all"
@@ -37,6 +52,7 @@ function Auth({comp}:{comp:string}) {
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
+                  onChange={(e)=>setUserData({...userData, email: e.target.value})}
                   type="email"
                   placeholder="Email Address"
                    className="w-full pl-12 pr-4 py-3 border border-gray-200 outline-none bg-gray-50 rounded transition-all"
@@ -46,13 +62,14 @@ function Auth({comp}:{comp:string}) {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
+                  onChange={(e)=>setUserData({...userData, password: e.target.value})}
                   type="password"
                   placeholder="Password"
                   className="w-full pl-12 pr-4 py-3 border border-gray-200 outline-none bg-gray-50 rounded transition-all"
                 />
               </div>
 
-              <button className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+              <button onClick={handleSubmit} className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
                 {comp =="signin" ? 'Sign In' : 'Create Account'}
               </button>
 

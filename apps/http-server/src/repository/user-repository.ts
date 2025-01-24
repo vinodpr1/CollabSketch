@@ -13,7 +13,7 @@ class UserRepository{
             const jwtToken = jwt.sign({ id: user.id }, "vinodpr");
             console.log("token", jwtToken);
             console.log("User", user);
-            return {user, jwtToken};
+            return  jwtToken;
         } catch (error) {
            console.log("Eoor has occured at user controller");
            throw error;
