@@ -1,114 +1,71 @@
-"use state"
 import React, { useState } from 'react';
-import { Github, LogIn, ChevronRight } from 'lucide-react';
+import { Moon, Sun, Mail, Lock, User } from 'lucide-react';
+import Link from 'next/link';
 
-function Auth() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
+function Auth({comp}:{comp:string}) {
+  const [isLogin, setIsLogin] = useState(true);
+    
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8">
-        {/* Logo and Header */}
-        <div className="text-center">
-          <div className="flex justify-center">
-            <LogIn className="h-12 w-12 text-blue-500" />
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Toggle Container */}
+        <div className="bg-white rounded shadow-xl overflow-hidden">
+          {/* Toggle Header */}
+          <div className="relative h-16 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div 
+              className={`absolute inset-0 flex transition-transform duration-500 ease-in-out ${
+                comp =="signin" ? 'translate-x-0' : 'translate-x-full'
+              }`}
+            >
+            </div>
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold">Welcome</h2>
-          <p className="mt-2 text-sm text-gray-400">
-            Sign in to continue to Whiteboard
-          </p>
+
+          {/* Form Container */}
+          <div className="p-8">
+            <div className="space-y-6">
+              { comp !="signin" && (
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    className="w-full pl-12 pr-4 py-3 border border-gray-200 outline-none bg-gray-50 rounded transition-all"
+                  />
+                </div>
+              )}
+              
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                   className="w-full pl-12 pr-4 py-3 border border-gray-200 outline-none bg-gray-50 rounded transition-all"
+                />
+              </div>
+              
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 outline-none bg-gray-50 rounded transition-all"
+                />
+              </div>
+
+              <button className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                {comp =="signin" ? 'Sign In' : 'Create Account'}
+              </button>
+
+              <p className="text-center text-sm text-gray-500">
+                {comp =="signin" ? (
+                  <>Don't have an account? <Link href="/signup"><button className="text-indigo-600 font-medium hover:underline">Sign Up</button> </Link></>
+                ) : (
+                  <>Already have an account? <Link href="/signin"><button className="text-indigo-600 font-medium hover:underline">Sign In</button> </Link> </>
+                )}
+              </p>
+            </div>
+          </div>
         </div>
-
-        {/* Sign In Form */}
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="space-y-4 rounded-md">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-700 rounded-lg bg-gray-800 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-700 rounded-lg bg-gray-800 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Password"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-700 bg-gray-800 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-900"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-blue-500 hover:text-blue-400">
-                Forgot password?
-              </a>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900"
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <ChevronRight className="h-5 w-5 text-blue-500 group-hover:text-blue-400" />
-              </span>
-              Sign in
-            </button>
-
-            <button
-              type="button"
-              className="group relative w-full flex justify-center py-2 px-4 border border-gray-700 rounded-lg text-sm font-medium text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-gray-900"
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <Github className="h-5 w-5 text-gray-500 group-hover:text-gray-400" />
-              </span>
-              Continue with GitHub
-            </button>
-          </div>
-        </form>
-
-        {/* Sign Up Link */}
-        <p className="mt-8 text-center text-sm text-gray-400">
-          Don't have an account?{' '}
-          <a href="#" className="font-medium text-blue-500 hover:text-blue-400">
-            Sign up for free
-          </a>
-        </p>
       </div>
     </div>
   );

@@ -30,62 +30,21 @@ function Landing() {
                         </span>
                     </div>
                     <div className="flex items-center space-x-6">
-                    
-                     <button 
-                          onClick={handleLogin}
-                          className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors"
-                        >
-                       <LogIn className="w-5 h-5" />
-                       <span>Sign up</span>
-                    </button>
-
-                        {isLoggedIn ? (
-                            <div className="relative">
-                                <button
-                                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                    className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors"
-                                >
-                                    <User className="w-5 h-5" />
-                                    <span>My Account</span>
-                                    <ChevronDown className="w-4 h-4" />
-                                </button>
-
-                                {isUserMenuOpen && (
-
-                                    <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
-                                        <button
-                                            onClick={handleLogin}
-                                            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors"
-                                        >
-                                            <LogIn className="w-5 h-5" />
-                                            <span>Sign in</span>
-                                        </button>
-
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Settings</a>
-                                        <div className="border-t border-gray-700 my-1"></div>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2"
-                                        >
-                                            <LogOut className="w-4 h-4" />
-                                            <span>Sign out</span>
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <button
-                                onClick={handleLogin}
-                                className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors"
-                            >
-                                <LogIn className="w-5 h-5" />
-                                <span>Sign in</span>
-                            </button>
-                        )}
-
-                        <button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors">
-                            Open App
-                        </button>
+                    <Link href="/signin">
+                      <button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors">
+                          Sign in
+                      </button>
+                    </Link>
+                    <Link href="/signup">
+                      <button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors">
+                          Sign up
+                      </button>  
+                    </Link>
+                    <Link href="/draw/12345">
+                      <button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors">
+                          Open App
+                      </button>
+                    </Link>
                     </div>
                 </nav>
             </header>
