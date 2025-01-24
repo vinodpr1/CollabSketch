@@ -36,6 +36,15 @@ const handleMessages=(users:User[], data:Message, ws: WebSocket)=>{
     }
 }
 
+
+function broadcastMessage(message:any) {
+   wss.clients.forEach(client => {
+       if (client.readyState === WebSocket.OPEN) {
+           client.send(message);
+       }
+   });
+}
+
 wss.on("connection", (ws:WebSocket, req:Request)=>{
     const urlParams = new URLSearchParams(req?.url?.split("?")[1]);
     const token = urlParams.get("userid")
@@ -53,6 +62,8 @@ wss.on("connection", (ws:WebSocket, req:Request)=>{
 
     ws.on("message", (message:any)=>{
        const data = JSON.parse(message.toString());
-       handleMessages(users, data, ws);
+      //  handleMessages(users, data, ws);
+      broadcastMessage("aaa merii jaaan");
+
     });
 })

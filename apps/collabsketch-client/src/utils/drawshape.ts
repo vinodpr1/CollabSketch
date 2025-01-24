@@ -65,13 +65,15 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, color:Color, stro
         pencilPath=[];
         const rect = canvas.getBoundingClientRect();
         
+
         // socket logic to send messages to the backend server;
-        console.log("Hello from my side brooohhh");
+        // console.log("Hello from my side brooohhh");
         socket.send('{ "message" : "checking the server" }');
         socket.onmessage=(event)=>{
-            console.log("Hii", event.data);
+            console.log("#3333333", event.data);
         }
         // socket logic to send messages to the backend server;
+
 
         if(tool=="rectangle"){
             existingShape.push({type:"rect", color:color, stroke: stroke, startX:startX, startY: startY, width: width, height: height });
@@ -171,10 +173,8 @@ const drawShapesBeforeClear=(ctx:CanvasRenderingContext2D , canvas:HTMLCanvasEle
             for(let i=1 ; i<shape.path.length; i++){
                 ctx.moveTo( shape.path[i-1].x, shape.path[i-1].y );
                 ctx.lineTo( shape.path[i].x, shape.path[i].y  );
-                console.log("#33");
             }
             ctx.stroke();
-            console.log(existingShape);
         }
     })
 
