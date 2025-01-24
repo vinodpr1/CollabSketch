@@ -20,6 +20,9 @@ importers:
 
   apps/collabsketch-client:
     dependencies:
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       lucide-react:
         specifier: ^0.473.0
         version: 0.473.0(react@19.0.0)

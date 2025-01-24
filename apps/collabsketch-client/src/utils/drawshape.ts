@@ -32,8 +32,8 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string, socket:WebSock
     const ctx = canvas.getContext("2d");
     if(!ctx) return;
   
-    ctx.fillStyle= "rgba(0, 0, 0)"
-    ctx.fillRect(0,0,canvas.width, canvas.height);
+    // ctx.fillStyle= "rgb(255, 255, 255)"
+    // ctx.fillRect(0,0,canvas.width, canvas.height);
     
     let startX:number=0;
     let startY:number=0;
@@ -56,14 +56,12 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string, socket:WebSock
         
         // socket logic to send messages to the backend server;
         console.log("Hello from my side brooohhh");
-        socket.send("Jay ma samay ji");
+        socket.send('{ "message" : "checking the server" }');
         socket.onmessage=(event)=>{
             console.log("Hii", event.data);
         }
 
         // socket logic to send messages to the backend server;
-
-
 
         if(shape=="rect"){
             existingShape.push({type:"rect", startX:startX, startY: startY, width: width, height: height });
@@ -85,25 +83,25 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string, socket:WebSock
         height = event.clientY - startY - rect.top;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle= "rgba(0, 0, 0)"
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        // ctx.fillStyle= "rgb(255, 255, 255)"
+        // ctx.fillRect(0, 0, canvas.width, canvas.height)
 
         drawShapesBeforeClear(ctx, canvas, existingShape);
 
         if(shape=="rect"){
-            ctx.strokeStyle= "white";
+            ctx.strokeStyle= "black";
             ctx.strokeRect(startX, startY, width, height);
         }else if(shape=="arc"){
             const radius = Math.sqrt(width ** 2 + height ** 2);
             ctx.beginPath();
-            ctx.strokeStyle= "white";
+            ctx.strokeStyle= "black";
             ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
             ctx.stroke();
         }else if(shape=="line"){
             ctx.beginPath();
             ctx.moveTo( startX, startY );
             ctx.lineTo( event.clientX-rect.left, event.clientY-rect.top );
-            ctx.strokeStyle= "white";
+            ctx.strokeStyle= "black";
             ctx.stroke();
         }else{
             const currentX = event.clientX - rect.left;
@@ -111,7 +109,7 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string, socket:WebSock
             pencilPath.push({x:currentX, y:currentY});
 
             ctx.beginPath();
-            ctx.strokeStyle= "white";
+            ctx.strokeStyle= "black";
 
             for(let i=1 ; i<pencilPath.length; i++){
                 ctx.moveTo( pencilPath[i-1].x, pencilPath[i-1].y );
@@ -130,23 +128,23 @@ export const drawShape = (canvas:HTMLCanvasElement, shape:string, socket:WebSock
 const drawShapesBeforeClear=(ctx:CanvasRenderingContext2D , canvas:HTMLCanvasElement, existingShape:ExistingShape[])=>{
     existingShape.map((shape:ExistingShape)=>{
         if(shape.type == "rect"){
-          ctx.strokeStyle= "white";
+          ctx.strokeStyle= "black";
           ctx.strokeRect(shape.startX, shape.startY, shape.width, shape.height);
         }
         else if(shape.type == "arc"){
             ctx.beginPath();
             ctx.arc(shape.startX, shape.startY, shape.radius , 0, 2 * Math.PI); // Circle centered at (100, 100) with radius 50
-            ctx.strokeStyle= "white";
+            ctx.strokeStyle= "black";
             ctx.stroke();
         }else if(shape.type == "line"){
             ctx.beginPath();
             ctx.moveTo( shape.startX, shape.startY );
             ctx.lineTo( shape.moveX, shape.moveY );
-            ctx.strokeStyle= "white";
+            ctx.strokeStyle= "black";
             ctx.stroke();
         }else{
             ctx.beginPath();
-            ctx.strokeStyle= "white";
+            ctx.strokeStyle= "black";
 
             for(let i=1 ; i<shape.path.length; i++){
                 ctx.moveTo( shape.path[i-1].x, shape.path[i-1].y );

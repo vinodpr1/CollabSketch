@@ -13,7 +13,7 @@ type Message = {
       type: string;
       message: string;
       room: string;
-    }
+}
   
 
 const users:User[] = []
@@ -28,6 +28,10 @@ const handleMessages=(users:User[], data:Message, ws: WebSocket)=>{
          if(user.rooms.includes(data.room)){
             user.ws.send(data.message);
          }
+      })
+    }else{
+      users.map((user)=>{
+         user.ws.send(data.message);
       })
     }
 }
