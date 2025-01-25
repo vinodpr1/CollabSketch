@@ -46,11 +46,10 @@ function page() {
   }
   
   if(!rooms.length) return <h1>Loading .....</h1>
-  console.log("@3333",rooms);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-3 sm:p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 gap-4">
           <h1 className="text-2xl sm:text-3xl font-medium text-gray-900 flex items-center gap-2">
@@ -92,7 +91,7 @@ function page() {
               className="group bg-gray-200  shadow-lg backdrop-blur-sm rounded-xl hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col transform hover:-translate-y-1"
             >
               <div 
-                className="h-32 sm:h-40 bg-cover bg-center relative"
+                className="h-24 sm:h-28 bg-cover bg-center relative"
                 style={{ backgroundImage: `url(https://plus.unsplash.com/premium_photo-1701590725824-3d0482721544?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8d2Vic2l0ZSUyMGJhbm5lcnxlbnwwfHwwfHx8MA%3D%3D)` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 group-hover:from-black/70 transition-all" />
@@ -113,7 +112,7 @@ function page() {
 
                 <button
                   onClick={() => handleJoinRoom("room")}
-                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 sm:py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm sm:text-base"
+                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1 sm:py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm sm:text-base"
                 >
                   Join Room
                   <ArrowRightCircle className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
@@ -165,6 +164,7 @@ function page() {
           </div>
         </div>
       )}
+      
     </div>
   );
 }
