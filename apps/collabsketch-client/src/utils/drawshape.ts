@@ -83,12 +83,12 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, color:Color, stro
         if(!shape) return;
         existingShape.push(shape);
 
-        // socket.send(JSON.stringify({type:"rect", color:color, stroke: stroke, startX:startX, startY: startY, width: width, height: height }));
-        // socket.onmessage=(event)=>{
-        //     existingShape.push(JSON.parse(event.data));
-        //     console.log(JSON.parse(event.data));
-        //     drawShapesBeforeClear(ctx, canvas, existingShape);
-        // }
+        socket.send(JSON.stringify(shape));
+        socket.onmessage=(event)=>{
+            existingShape.push(JSON.parse(event.data));
+            console.log(JSON.parse(event.data));
+            drawShapesBeforeClear(ctx, canvas, existingShape);
+        }
         
     });
 

@@ -3,10 +3,10 @@ import {prismaClient} from "@repo/db/prismaclient"
 class RoomRepository{
     constructor(){}
 
-    async CreateRoom(data:any){
+    async CreateRoom(slug:string, userid:number){
         try {
-            console.log(data);
-            return  1234;
+            const response = await prismaClient.room.create({data:{slug:slug, userid:userid}});
+            return  response;
         } catch (error) {
            console.log("Eoor has occured at user controller");
            throw error;

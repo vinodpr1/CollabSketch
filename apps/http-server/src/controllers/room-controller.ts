@@ -4,10 +4,13 @@ const roomServices = new RoomServices();
 export const CreateRoom = async (req: any, res: any) => {
     try {
         const data = req.body;
-        const response = await roomServices.CreateRoom("vinod");
+        const token = req.headers.token;
+
+        const response = await roomServices.CreateRoom(data.slug, token);
         res.status(200).json({
             message: "Room created successfully",
-            response: response
+            response: response,
+            success: true
         });
     } catch (error) {
         res.status(400).json({
