@@ -21,7 +21,7 @@ function Auth({comp}:{comp:string}) {
         if(response.data){
           console.log(response);
           localStorage.setItem("token", response.data.token);
-          router.push("/draw/123")
+          router.push("/rooms");
         };
      }
 

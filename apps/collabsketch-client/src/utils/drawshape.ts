@@ -64,11 +64,6 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, color:Color, stro
         clicked=false;
         pencilPath=[];
         const rect = canvas.getBoundingClientRect();
-        
-
-       
-       
-
 
         if(tool=="rectangle"){
             existingShape.push({type:"rect", color:color, stroke: stroke, startX:startX, startY: startY, width: width, height: height });
