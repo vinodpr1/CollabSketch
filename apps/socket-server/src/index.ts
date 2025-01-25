@@ -46,6 +46,9 @@ function broadcastMessage(message:any) {
 }
 
 wss.on("connection", (ws:WebSocket, req:Request)=>{
+
+   console.log("Urlllll with sluggg", req?.url?.split("=")[2]);
+
     const urlParams = new URLSearchParams(req?.url?.split("?")[1]);
     const token = urlParams.get("userid")
     if(!token) return
@@ -53,6 +56,7 @@ wss.on("connection", (ws:WebSocket, req:Request)=>{
     if(!data) return;
     const parsedData =new URLSearchParams(data);
     const userId = parsedData.get("id");
+    console.log("Iddd is", userId);
   
     users.push({
       userId: Number(userId),

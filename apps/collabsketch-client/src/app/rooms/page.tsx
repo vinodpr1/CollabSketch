@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Users, ArrowRightCircle, Search, Plus, X } from 'lucide-react';
 import { HTTP_BACKEND_URL } from '@repo/common/HTTP_BACKEND_URL';
 import axios from 'axios';
+import Link from 'next/link';
 
 interface Room {
   id: number,
@@ -10,21 +11,12 @@ interface Room {
   userid: number
 }
 
-
 function page() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [rooms, setRooms] = useState<Room[]>([]);
   const [newRoom, setNewRoom] = useState("");
 
-  // const filteredRooms = rooms.filter(room => {
-  //   const matchesSearch = room.slug.toLowerCase().includes(searchQuery.toLowerCase());
-  //   return matchesSearch;
-  // });
-
-  const handleJoinRoom = (roomId: string) => {
-    console.log(`Joining room ${roomId}`);
-  };
 
   const handleCreateRoom = async () => {
      const token = localStorage.getItem("token");
@@ -110,13 +102,15 @@ function page() {
                   </span>
                 </div>
 
+              <Link href={`/draw/${room.slug}`}>
                 <button
-                  onClick={() => handleJoinRoom("room")}
                   className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1 sm:py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm sm:text-base"
                 >
                   Join Room
                   <ArrowRightCircle className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
                 </button>
+              </Link>
+
               </div>
             </div>
           ))}
@@ -164,7 +158,7 @@ function page() {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 }

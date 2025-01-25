@@ -20,7 +20,7 @@ model User {
   password      String
   profilepic    String?
   rooms          Room[]
-  chats          Chat[]      
+  chats          Chat[]
 }
 
 
