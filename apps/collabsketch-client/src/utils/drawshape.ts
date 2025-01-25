@@ -66,13 +66,8 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, color:Color, stro
         const rect = canvas.getBoundingClientRect();
         
 
-        // socket logic to send messages to the backend server;
-        // console.log("Hello from my side brooohhh");
-        socket.send('{ "message" : "checking the server" }');
-        socket.onmessage=(event)=>{
-            console.log("#3333333", event.data);
-        }
-        // socket logic to send messages to the backend server;
+       
+       
 
 
         if(tool=="rectangle"){
@@ -85,6 +80,14 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, color:Color, stro
         }else if(tool=="pencil"){
             existingShape.push({type:"pencil", color:color, stroke: stroke, path:pencilPath});
         }
+
+        socket.send(JSON.stringify({type:"rect", color:color, stroke: stroke, startX:startX, startY: startY, width: width, height: height }));
+        socket.onmessage=(event)=>{
+            existingShape.push(JSON.parse(event.data));
+            console.log(JSON.parse(event.data));
+            drawShapesBeforeClear(ctx, canvas, existingShape);
+        }
+        
     });
 
     canvas.addEventListener("mousemove",(event:MouseEvent)=>{

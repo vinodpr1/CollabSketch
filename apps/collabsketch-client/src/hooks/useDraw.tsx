@@ -6,7 +6,7 @@ export type Size =  10 | 14 | 18 | 22 | 24
 export type Stroke =  1 | 2 | 2 | 4 | 5
 
 export const useDraw=()=>{
-    const [tool, setTool] = useState<Tool>('pencil');
+    const [tool, setTool] = useState<Tool>('rectangle');
     const [color, setColor] = useState<Color>("#001219");
     const [size, setSize] = useState<Size>(10);
     const [stroke, setStroke] = useState<Stroke>(1);

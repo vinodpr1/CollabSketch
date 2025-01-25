@@ -62,8 +62,7 @@ wss.on("connection", (ws:WebSocket, req:Request)=>{
 
     ws.on("message", (message:any)=>{
        const data = JSON.parse(message.toString());
-      //  handleMessages(users, data, ws);
-      broadcastMessage("aaa merii jaaan");
-
+       console.log(JSON.stringify(data));
+      broadcastMessage(JSON.stringify(data));
     });
 })
