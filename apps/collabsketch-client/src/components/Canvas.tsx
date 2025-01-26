@@ -10,17 +10,24 @@ const Canvas = ({socket}:{socket: WebSocket}) => {
      const { changeTool, tool, color, changeColor, size, changeSize, stroke, changeStroke } = useDraw();
     
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+      
+        //@ts-ignore
+        window.currentSelectedTool = tool;
+        console.log("tool", tool);
+      
+    }, [tool]);
   
     useEffect(()=>{
         if(canvasRef.current){
           const canvas = canvasRef.current;
-          drawShape(canvas, tool, color, stroke, socket);
+          drawShape(canvas, socket);
         }
-    },[canvasRef, tool, color, stroke]);
+    },[canvasRef, color, stroke]);
 
   return (
     <div className='absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]'>
-        <h1></h1>
         <Toolbar  
            setTool={changeTool}
         />
