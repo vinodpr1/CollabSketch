@@ -1,5 +1,3 @@
-
-
 import { Color, Stroke, Tool } from "@/hooks/useDraw";
 
  
@@ -91,7 +89,7 @@ export const drawShape = (canvas:HTMLCanvasElement, tool:Tool, color:Color, stro
             console.log(event.data);
             drawShapesBeforeClear(ctx, canvas, existingShape);
         }
-        
+
     });
 
     canvas.addEventListener("mousemove",(event:MouseEvent)=>{

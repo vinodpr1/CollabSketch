@@ -1,5 +1,6 @@
 import {WebSocketServer, WebSocket} from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { prismaClient } from "@repo/db/prismaclient";
 
 const wss = new WebSocketServer({port:8100});
 
@@ -14,10 +15,8 @@ type Message = {
       message: string;
       room: string;
 }
-  
 
 const users:User[] = []
-
 
 // const handleMessages=(users:User[], data:Message, ws: WebSocket)=>{
 //     if (data.type == "join_room") {
@@ -35,7 +34,6 @@ const users:User[] = []
 //       })
 //     }
 // }
-
 
 function broadcastMessage(message:any) {
    wss.clients.forEach(client => {
@@ -79,13 +77,22 @@ wss.on("connection", (ws:WebSocket, req:Request)=>{
    //    rooms: [],
    //  });
 
-    ws.on("message", (message:any)=>{
+    ws.on("message", async (message:any)=>{
        const data = JSON.parse(message.toString());
-       console.log("Message received from cient");
+       
+       // find the roomid based upon slug in url
+       const room = await prismaClient.room.findFirst({where:{slug:slug}});
+       if(!room) return;
 
-       users.forEach((user)=>{
-          user.ws.send(JSON.stringify(data));
-       })
+       // dump messages in chat tableesss
+
+      await prismaClient.chat.create({data:{message: JSON.stringify(data), senderid: userData.id, roomid: room.id}})
+
+      users.forEach((user)=>{
+         if(user.rooms.includes(slug)){
+            user.ws.send(JSON.stringify(data));
+         }
+      });
 
     });
 
