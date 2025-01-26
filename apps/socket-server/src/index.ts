@@ -79,10 +79,14 @@ wss.on("connection", (ws:WebSocket, req:Request)=>{
    //    rooms: [],
    //  });
 
-   //  ws.on("message", (message:any)=>{
-   //     const data = JSON.parse(message.toString());
-   //     console.log(JSON.stringify(data));
-   //    broadcastMessage(JSON.stringify(data));
-   //  });
+    ws.on("message", (message:any)=>{
+       const data = JSON.parse(message.toString());
+       console.log("Message received from cient");
+
+       users.forEach((user)=>{
+          user.ws.send(JSON.stringify(data));
+       })
+
+    });
 
 })
