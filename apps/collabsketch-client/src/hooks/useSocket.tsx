@@ -11,7 +11,7 @@ const useSocket=(slug:string)=>{
           setSocket(wss);
           setLoading(false);
        });
-    }, []);
+    }, [slug]);
 
     return {loading, socket};
 }

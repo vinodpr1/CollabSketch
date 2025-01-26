@@ -19,22 +19,22 @@ type Message = {
 const users:User[] = []
 
 
-const handleMessages=(users:User[], data:Message, ws: WebSocket)=>{
-    if (data.type == "join_room") {
-       const user = users.find(user=>user.ws == ws);
-       user?.rooms.push(data.room);
-    } else if(data.type == "chat") {
-      users.forEach((user)=>{
-         if(user.rooms.includes(data.room)){
-            user.ws.send(data.message);
-         }
-      })
-    }else{
-      users.map((user)=>{
-         user.ws.send(data.message);
-      })
-    }
-}
+// const handleMessages=(users:User[], data:Message, ws: WebSocket)=>{
+//     if (data.type == "join_room") {
+//        const user = users.find(user=>user.ws == ws);
+//        user?.rooms.push(data.room);
+//     } else if(data.type == "chat") {
+//       users.forEach((user)=>{
+//          if(user.rooms.includes(data.room)){
+//             user.ws.send(data.message);
+//          }
+//       })
+//     }else{
+//       users.map((user)=>{
+//          user.ws.send(data.message);
+//       })
+//     }
+// }
 
 
 function broadcastMessage(message:any) {
@@ -47,26 +47,42 @@ function broadcastMessage(message:any) {
 
 wss.on("connection", (ws:WebSocket, req:Request)=>{
 
-   console.log("Urlllll with sluggg", req?.url?.split("=")[2]);
-
+    const rawSlug = req?.url?.split("=")[2];
+    const slug = rawSlug?.split("%20").join(" ");
+   
     const urlParams = new URLSearchParams(req?.url?.split("?")[1]);
     const token = urlParams.get("userid")
     if(!token) return
-    const data = jwt.verify(token, "vinodpr");
-    if(!data) return;
-    const parsedData =new URLSearchParams(data);
-    const userId = parsedData.get("id");
-    console.log("Iddd is", userId);
-  
-    users.push({
-      userId: Number(userId),
-      rooms: [],
-      ws: ws,
-    });
+    const userData = jwt.verify(token, "vinodpr") as JwtPayload;
 
-    ws.on("message", (message:any)=>{
-       const data = JSON.parse(message.toString());
-       console.log(JSON.stringify(data));
-      broadcastMessage(JSON.stringify(data));
-    });
+    // let's check if the user aalready joined that particular room?
+    
+    const isExist = users.find((user)=>user.userId == userData.id);
+
+    if(isExist){
+       if(!slug) return;
+       isExist.rooms.push(slug);
+    }
+    else{
+      if(!slug) return;
+      const user = {userId: userData.id, rooms:[], ws: ws};
+      //@ts-ignore
+      user.rooms.push(slug);
+      users.push(user);
+    }
+  
+     console.log("All usersss",  users);
+  
+  
+   //  users.push({
+   //    userId: userData.id,
+   //    rooms: [],
+   //  });
+
+   //  ws.on("message", (message:any)=>{
+   //     const data = JSON.parse(message.toString());
+   //     console.log(JSON.stringify(data));
+   //    broadcastMessage(JSON.stringify(data));
+   //  });
+
 })
