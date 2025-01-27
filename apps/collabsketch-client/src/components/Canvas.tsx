@@ -12,11 +12,9 @@ const Canvas = ({socket}:{socket: WebSocket}) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-      
         //@ts-ignore
         window.currentSelectedTool = tool;
         console.log("tool", tool);
-      
     }, [tool]);
   
     useEffect(()=>{

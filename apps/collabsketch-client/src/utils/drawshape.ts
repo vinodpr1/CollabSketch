@@ -90,14 +90,14 @@ export const drawShape = async(canvas:HTMLCanvasElement, socket:WebSocket) =>{
         existingShape.push(shape);
 
         // previously sended data from client
-        //JSON.stringify(shape) 
+        JSON.stringify(shape) 
         
-        // socket.send(JSON.stringify(shape));
-        // socket.onmessage=(event)=>{
-        //     existingShape.push(JSON.parse(event.data));
-        //     console.log(event.data);
-        //     drawShapesBeforeClear(ctx, canvas, existingShape);
-        // }
+        socket.send(JSON.stringify(shape));
+        socket.onmessage=(event)=>{
+            existingShape.push(JSON.parse(event.data));
+            console.log(event.data);
+            drawShapesBeforeClear(ctx, canvas, existingShape);
+        }
 
         
     });
