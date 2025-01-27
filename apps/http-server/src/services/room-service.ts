@@ -27,6 +27,16 @@ class RoomServices{
         } 
      }
 
+     async GetRoomBySlug(slug:string){
+      try {
+         const response = await roomRepository.GetRoomBySlug(slug);
+         return response;
+      } catch (error) {
+        console.log("Eoor has occured at user controller");
+        throw error;
+      } 
+   }
+
 };
 
 export {

@@ -5,7 +5,7 @@ import Toolbar from './Toolbar';
 import { useDraw } from '@/hooks/useDraw';
 import Filterbar from './Filterbar';
 
-const Canvas = ({socket}:{socket: WebSocket}) => {
+const Canvas = ({socket, roomid}:{socket: WebSocket, roomid:any}) => {
 
      const { changeTool, tool, color, changeColor, size, changeSize, stroke, changeStroke } = useDraw();
     
@@ -20,7 +20,7 @@ const Canvas = ({socket}:{socket: WebSocket}) => {
     useEffect(()=>{
         if(canvasRef.current){
           const canvas = canvasRef.current;
-          drawShape(canvas, socket);
+          drawShape(canvas, socket, roomid);
         }
     },[canvasRef, color, stroke]);
 

@@ -7,7 +7,7 @@ const CanvasRoom = (roomid:any) => {
 
   if(!socket) return <h1 className='text-black'>Loading the content......</h1>
 
-  return <Canvas socket={socket}/>
+  return <Canvas socket={socket} roomid={roomid.roomid}/>
 }
 
 export default CanvasRoom

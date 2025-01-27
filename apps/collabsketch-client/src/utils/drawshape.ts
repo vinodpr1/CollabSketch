@@ -1,5 +1,6 @@
 import { Color, Stroke, Tool } from "@/hooks/useDraw";
-
+import { HTTP_BACKEND_URL } from "@repo/common/HTTP_BACKEND_URL";
+import axios from "axios";
  
  interface Pencil{
     x: number,
@@ -39,12 +40,19 @@ import { Color, Stroke, Tool } from "@/hooks/useDraw";
 
 
 
-export const drawShape = async(canvas:HTMLCanvasElement, socket:WebSocket) =>{
+export const drawShape = async(canvas:HTMLCanvasElement, socket:WebSocket, roomid:any) =>{
     const ctx = canvas.getContext("2d");
 
-    const existingShape:ExistingShape[] = [];
-    
+    const existingShape: ExistingShape[] = await getShapes(roomid);;
+      
     if(!ctx) return;
+
+    drawShapesBeforeClear(ctx, canvas, existingShape);
+
+    //  response fro the database
+    
+
+  
   
     // ctx.fillStyle= "rgb(255, 255, 255)"
     // ctx.fillRect(0,0,canvas.width, canvas.height);
@@ -203,3 +211,14 @@ const drawShapesBeforeClear=(ctx:CanvasRenderingContext2D , canvas:HTMLCanvasEle
     })
 }
 
+const getShapes = async(roomid:any) =>{
+    const slug = roomid.split("%20").join(" ");
+    const room = await axios.get(`${HTTP_BACKEND_URL}/room/slugroom?slug=${slug}`);
+    const chats = await axios.get(`${HTTP_BACKEND_URL}/chat/messages?roomid=${room.data.response.id}`);
+    if(!chats) return;
+    const parsedChat = chats.data.chats.map((data:any)=>{
+        console.log("Hiiii", data.message);
+        return JSON.parse(data.message);
+    })
+    return parsedChat;
+}
