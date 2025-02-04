@@ -4,7 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import Toolbar from './Toolbar';
 import { useDraw } from '@/hooks/useDraw';
 import Filterbar from './Filterbar';
-import TextTool from './TextTool';
+import { HTTP_BACKEND_URL } from '@repo/common/HTTP_BACKEND_URL';
+import axios from 'axios';
+
 
 interface CordsType {
   x: number, y: number
@@ -16,11 +18,6 @@ const Canvas = ({socket, roomid}:{socket: WebSocket, roomid:any}) => {
     
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    // useEffect(() => {
-    //     //@ts-ignore
-    //     window.currentSelectedTool = tool;
-    //     console.log("tool", tool);
-    // }, [tool]);
   
     useEffect(()=>{
         if(canvasRef.current){
@@ -43,7 +40,6 @@ const Canvas = ({socket, roomid}:{socket: WebSocket, roomid:any}) => {
           stroke={stroke}
           setStroke={changeStroke}
         />
-       <h1>Tool name {tool}</h1>
         <canvas
           ref={canvasRef}
           height={580}
