@@ -3,10 +3,6 @@ import { RoomServices } from "../services/room-service";
 const roomServices = new RoomServices();
 
 
-import { prismaClient } from "@repo/db/prismaclient";
-import { RoomServices } from "../services/room-service";
-const roomServices = new RoomServices();
-
 
 export const CreateRoom = async (req: any, res: any) => {
     try {
