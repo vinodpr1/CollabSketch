@@ -69,7 +69,7 @@ export const drawShape = async (
     const previousShapes =await getShapes(roomid);
     existingShape = previousShapes;
     drawShapesBeforeClear(ctx, canvas, existingShape);
-    
+    // console.log("prevous shapes", existingShape);
 
     let startX = 0;
     let startY = 0;
@@ -85,6 +85,9 @@ export const drawShape = async (
         canvas.removeEventListener("mouseup", previousListeners.mouseup);
         canvas.removeEventListener("mousemove", previousListeners.mousemove);
     }
+
+
+
 
     // Define event handlers
     const handleMouseDown = (event: MouseEvent) => {
@@ -214,6 +217,38 @@ export const drawShape = async (
                 }
                 ctx.stroke();
             }
+            else if(tool == "eraser"){
+              
+             existingShape = existingShape.filter((shape)=>{
+                return !findInterSection(event.clientX, event.clientY, shape);
+             });
+
+
+            // ctx.globalCompositeOperation = "destination-out";
+            // ctx.lineWidth = 20;
+            // ctx.lineCap = "round";
+            // ctx.strokeStyle = "rgba(0,0,0,1)"; // Fully erase
+            
+            // ctx.beginPath();
+            // ctx.moveTo(event.clientX, event.clientY);
+            
+            // canvas.addEventListener("mousemove", erase);
+            // canvas.addEventListener("mouseup", stopErasing);
+              
+
+            // function erase(event:any) {
+            //   if(!ctx) return;
+            //   ctx.lineTo(event.clientX, event.clientY);
+            //   ctx.stroke();
+            // }
+              
+            // function stopErasing() {
+            //   if(!ctx) return;
+            //   ctx.globalCompositeOperation = "source-over"; // Restore normal drawing mode
+            //   canvas.removeEventListener("mousemove", erase);
+            // }
+
+          }
         }
     };
 
@@ -231,6 +266,23 @@ export const drawShape = async (
 };
 
 
+const findInterSection = (x:any, y:any, existingShape:any) =>{
+      if(existingShape.type == "rectangle"){
+        console.log("Ohhh bhaiii");
+        const x1 = existingShape.startX;
+        const y1 = existingShape.startY;
+        const x2 = existingShape.width + existingShape.startX;
+        const y2 = existingShape.height + existingShape.startY;
+        const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
+        return truth;
+      }
+      const x1 = existingShape.startX;
+      const y1 = existingShape.startY;
+      const x2 = existingShape.moveX;
+      const y2 = existingShape.moveY;
+      const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
+      return truth;
+}
 
 const drawShapesBeforeClear = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, existingShape: ExistingShape[]) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
