@@ -27,6 +27,7 @@ const CustomCursor=()=>{
             border:`1px solid oklch(0.373 0.034 259.733)`,
             borderRadius:"50%",
             cursor:"none",
+            zIndex: 9999,
         }}>
 
         </div>
