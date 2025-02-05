@@ -218,7 +218,10 @@ export const drawShape = async (
                 ctx.stroke();
             }
             else if(tool == "eraser"){
-              
+            
+             // change the designing of the cursor 
+            
+
              existingShape = existingShape.filter((shape)=>{
                 return !findInterSection(event.clientX, event.clientY, shape);
              });
