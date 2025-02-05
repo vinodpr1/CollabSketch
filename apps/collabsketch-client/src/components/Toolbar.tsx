@@ -2,10 +2,11 @@ import { Pencil, Square, Circle, MoveUpRight, Type, Eraser, Undo2, Redo2, Minus 
 import { Tool } from '@/hooks/useDraw';
 
 interface ToolProps {
-    setTool: (tool: Tool) => void
+    setTool: (tool: Tool) => void,
+    tool: string
 }
 
-const Toolbar = ({ setTool }: ToolProps) => {
+const Toolbar = ({ setTool, tool }: ToolProps) => {
 
     const tools = [
         // { id: "select" as Tool, icon: MousePointer2 },
@@ -24,10 +25,13 @@ const Toolbar = ({ setTool }: ToolProps) => {
         <div className='absolute m-2 bg-white'>
             <div className='border flex flex-col gap-2 px-2 py-2 rounded shadow-lg'>
                 {
-                    tools.map((tool) => {
-                        const Icon = tool.icon;
+                    tools.map((t) => {
+                        const Icon = t.icon;
                         return (
-                         <button  onClick={() => setTool(tool.id)} key={tool.id} className={`p-2 rounded transition-all duration-500 cursor-pointer bg-gray-200 `}>
+                         <button  
+                           onClick={() => setTool(t.id)} key={t.id} 
+                           className={`${t.id==tool?"bg-purple-200" : ""} p-2 rounded transition-all duration-500 cursor-pointer bg-gray-100`
+                         }>
                            <Icon className={`w-4 h-4 transition-all duration-500 text-gray-700`} />
                          </button>
                         )
