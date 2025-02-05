@@ -66,9 +66,9 @@ export const drawShape = async (
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const previousShapes =await getShapes(roomid);
-    existingShape = previousShapes;
-    drawShapesBeforeClear(ctx, canvas, existingShape);
+    // const previousShapes =await getShapes(roomid);
+    // existingShape = previousShapes;
+    // drawShapesBeforeClear(ctx, canvas, existingShape);
     // console.log("prevous shapes", existingShape);
 
     let startX = 0;
@@ -223,31 +223,6 @@ export const drawShape = async (
                 return !findInterSection(event.clientX, event.clientY, shape);
              });
 
-
-            // ctx.globalCompositeOperation = "destination-out";
-            // ctx.lineWidth = 20;
-            // ctx.lineCap = "round";
-            // ctx.strokeStyle = "rgba(0,0,0,1)"; // Fully erase
-            
-            // ctx.beginPath();
-            // ctx.moveTo(event.clientX, event.clientY);
-            
-            // canvas.addEventListener("mousemove", erase);
-            // canvas.addEventListener("mouseup", stopErasing);
-              
-
-            // function erase(event:any) {
-            //   if(!ctx) return;
-            //   ctx.lineTo(event.clientX, event.clientY);
-            //   ctx.stroke();
-            // }
-              
-            // function stopErasing() {
-            //   if(!ctx) return;
-            //   ctx.globalCompositeOperation = "source-over"; // Restore normal drawing mode
-            //   canvas.removeEventListener("mousemove", erase);
-            // }
-
           }
         }
     };
@@ -267,8 +242,14 @@ export const drawShape = async (
 
 
 const findInterSection = (x:any, y:any, existingShape:any) =>{
+      if(existingShape.type == "ellipse"){
+          const x1 = existingShape.startX;
+          const y1 = existingShape.startY;
+          const radius = existingShape.radius;
+          const truth = (x - x1)**2 + (y - y1)**2 <= radius**2;
+          return truth;
+      }
       if(existingShape.type == "rectangle"){
-        console.log("Ohhh bhaiii");
         const x1 = existingShape.startX;
         const y1 = existingShape.startY;
         const x2 = existingShape.width + existingShape.startX;

@@ -1,6 +1,4 @@
-import { Type, Minus } from "lucide-react"
 import { Color, Size, Stroke } from "@/hooks/useDraw"
-
 
 interface FilterProps {
     setColor: (colirId: Color) => void
@@ -21,6 +19,7 @@ const Filterbar = ({ color, setColor, size, setSize, stroke, setStroke }: Filter
         <div className='absolute bg-white bottom-0 m-2'>
             <div className='border flex flex-col gap-2 px-2 py-1 rounded shadow-lg w-48 h-44'>
                 <div className="flex flex-col gap-2">
+                    
                     <div className="flex flex-col justify-center gap-1">
                         <p className="text-xs text-gray-700">Stroke</p>
                         <div className="flex flex-wrap gap-2">
@@ -77,6 +76,7 @@ const Filterbar = ({ color, setColor, size, setSize, stroke, setStroke }: Filter
                             }
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
