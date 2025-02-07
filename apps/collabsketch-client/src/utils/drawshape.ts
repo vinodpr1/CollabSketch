@@ -250,6 +250,30 @@ export const drawShape = async (
 
 
 const findInterSection = (x:any, y:any, existingShape:any) =>{
+      if(existingShape.type == "pencil"){
+        //  console.log("Pencil", x, y , existingShape);
+        
+         let truth = false; 
+         for(let i=0 ; i<existingShape.path.length; i++){
+             const points = existingShape.path[i];
+             console.log("Points",points);
+             if (points.x <= x-10 && points.x+10 >= x && points.y <= y-10 && points.y+10 >= y ) {
+                 truth =  true;
+             }
+         };
+
+        //  const x1 = existingShape.path[0].x;
+        //  const y1 = existingShape.path[0].y;
+        //  const x2 = existingShape.path[existingShape.path.length-1].x;
+        //  const y2 = existingShape.path[existingShape.path.length-1].y;
+        //  console.log("All path", existingShape.path);
+        //  console.log("x1, y2", x1, y1, x2, y2);
+        // const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
+        // console.log("truth", truth);
+        
+        return truth;
+      }
+
       if(existingShape.type == "ellipse"){
           const x1 = existingShape.startX;
           const y1 = existingShape.startY;
@@ -257,7 +281,7 @@ const findInterSection = (x:any, y:any, existingShape:any) =>{
           const truth = (x - x1)**2 + (y - y1)**2 <= radius**2;
           return truth;
       }
-      if(existingShape.type == "rectangle"){
+      else if(existingShape.type == "rectangle"){
         const x1 = existingShape.startX;
         const y1 = existingShape.startY;
         const x2 = existingShape.width + existingShape.startX;
@@ -265,12 +289,14 @@ const findInterSection = (x:any, y:any, existingShape:any) =>{
         const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
         return truth;
       }
-      const x1 = existingShape.startX;
-      const y1 = existingShape.startY;
-      const x2 = existingShape.moveX;
-      const y2 = existingShape.moveY;
-      const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
-      return truth;
+      else{
+        const x1 = existingShape.startX;
+        const y1 = existingShape.startY;
+        const x2 = existingShape.moveX;
+        const y2 = existingShape.moveY;
+        const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
+        return truth;
+      }
 }
 
 const drawShapesBeforeClear = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, existingShape: ExistingShape[]) => {
