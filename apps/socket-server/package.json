@@ -6,9 +6,11 @@
   "scripts": {
     "build": "tsc -b",
     "start": "nodemon dist/index.js",
-    "dev": "pnpm run build && pnpm run start"
+    "dev": "pnpm run build && pnpm run start",
+    "lint":"pnpm eslint"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/nodemon": "^1.19.6",
     "nodemon": "^3.1.9"

@@ -1,6 +1,3 @@
 import { UserServices } from "./user-service";
 
-
-export {
-    UserServices,
-}
+export { UserServices };

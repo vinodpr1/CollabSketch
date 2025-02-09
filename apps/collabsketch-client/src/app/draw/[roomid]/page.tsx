@@ -1,11 +1,10 @@
-import React from 'react'
-import CanvasRoom from '@/components/CanvasRoom';
+import React from "react";
+import CanvasRoom from "@/components/CanvasRoom";
 
-const page = async({params}:any) => {
-
+const page = async ({ params }: any) => {
   const roomid = (await params).roomid;
-  
-  return <CanvasRoom roomid={roomid}/>
-}
 
-export default page
+  return <CanvasRoom roomid={roomid} />;
+};
+
+export default page;

@@ -19,6 +19,11 @@ export const config = [
     },
     rules: {
       "turbo/no-undeclared-env-vars": "warn",
+      "no-unused-vars": "warn",
+      "require-await": "error",
+      "space-before-blocks": ["error", "always"],
+      "space-in-parens": ["error", "never"],
+      "no-multi-spaces": ["error"],
     },
   },
   {
