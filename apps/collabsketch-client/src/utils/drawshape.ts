@@ -68,16 +68,10 @@ export const drawShape = async (
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // const previousShapes =await getShapes(roomid);
-    // existingShape = previousShapes;
-    // drawShapesBeforeClear(ctx, canvas, existingShape);
-    // console.log("prevous shapes", existingShape);
-
 
     let startX = 0;
     let startY = 0;
     let clicked = false;
-    
 
     // Store previous event listeners to remove them properly
     const previousListeners = (canvas as any)._eventListeners || {};
@@ -89,9 +83,6 @@ export const drawShape = async (
         canvas.removeEventListener("mousemove", previousListeners.mousemove);
     }
 
-
-
-
     // Define event handlers
     const handleMouseDown = (event: MouseEvent) => {
         clicked = true;
@@ -102,13 +93,10 @@ export const drawShape = async (
 
     const handleMouseUp = (event: MouseEvent) => {
         clicked = false;
-
         const rect = canvas.getBoundingClientRect();
         let width = event.clientX - startX - rect.left;
         let height = event.clientY - startY - rect.top;
-
         let shape: ExistingShape | null = null;
-
         if (tool === "rectangle") {
             shape = {
                 type: "rectangle",
@@ -140,7 +128,6 @@ export const drawShape = async (
                 moveY: event.clientY - rect.top,
             };
         } else if (tool === "pencil") {
-            
             // console.log("pencil path", pencilPath);
             shape = { type: "pencil", color: color, stroke: 1, path: pencilPath };
             pencilPath = [];
@@ -159,7 +146,7 @@ export const drawShape = async (
 
         if (!shape) return;
         existingShape.push(shape);
-       
+
         socket.send(JSON.stringify(shape));
         socket.onmessage = (event) => {
             existingShape.push(JSON.parse(event.data));
@@ -202,11 +189,9 @@ export const drawShape = async (
                 var dx = event.clientX - rect.left - startX;
                 var dy = event.clientY - rect.top - startY;
                 var angle = Math.atan2(dy, dx);
-    
-                ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top );
+                ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
                 ctx.lineTo(event.clientX - rect.left - arrowLen * Math.cos(angle - Math.PI / 6), event.clientY - rect.top - arrowLen * Math.sin(angle - Math.PI / 6));
                 ctx.stroke();
-    
                 ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
                 ctx.lineTo(event.clientX - rect.left - arrowLen * Math.cos(angle + Math.PI / 6), event.clientY - rect.top - arrowLen * Math.sin(angle + Math.PI / 6));
                 ctx.stroke();
@@ -215,7 +200,6 @@ export const drawShape = async (
                 const currentX = event.clientX - rect.left;
                 const currentY = event.clientY - rect.top;
                 pencilPath.push({ x: currentX, y: currentY });
-               
                 ctx.beginPath();
                 for (let i = 1; i < pencilPath.length; i++) {
                     ctx.moveTo(pencilPath[i - 1].x, pencilPath[i - 1].y);
@@ -223,17 +207,14 @@ export const drawShape = async (
                 }
                 ctx.stroke();
             }
-            else if(tool == "eraser"){
-             existingShape = existingShape.filter((shape)=>{
-                return !findInterSection(event.clientX, event.clientY, shape);
-             });
-           }
-           else if(tool == "undo"){
-            
-            //   existingShape.pop();
-           }
+            else if (tool == "eraser") {
+                existingShape = existingShape.filter((shape) => {
+                    return !findInterSection(event.clientX-rect.left, event.clientY-rect.left, shape);
+                });
+            }
         }
     };
+
 
     // Attach new event listeners
     canvas.addEventListener("mousedown", handleMouseDown);
@@ -249,60 +230,49 @@ export const drawShape = async (
 };
 
 
-const findInterSection = (x:any, y:any, existingShape:any) =>{
-      if(existingShape.type == "pencil"){
+const findInterSection = (x: any, y: any, existingShape: any) => {
+    if (existingShape.type == "pencil") {
         //  console.log("Pencil", x, y , existingShape);
-        
-         let truth = false; 
-         for(let i=0 ; i<existingShape.path.length; i++){
-             const points = existingShape.path[i];
-             console.log("Points",points);
-             if (points.x <= x-10 && points.x+10 >= x && points.y <= y-10 && points.y+10 >= y ) {
-                 truth =  true;
-             }
-         };
 
-        //  const x1 = existingShape.path[0].x;
-        //  const y1 = existingShape.path[0].y;
-        //  const x2 = existingShape.path[existingShape.path.length-1].x;
-        //  const y2 = existingShape.path[existingShape.path.length-1].y;
-        //  console.log("All path", existingShape.path);
-        //  console.log("x1, y2", x1, y1, x2, y2);
-        // const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
-        // console.log("truth", truth);
-        
+        let truth = false;
+        for (let i = 0; i < existingShape.path.length; i++) {
+            const points = existingShape.path[i];
+            console.log("Points", points);
+            if (points.x <= x - 10 && points.x + 10 >= x && points.y <= y - 10 && points.y + 10 >= y) {
+                truth = true;
+            }
+        };
+
         return truth;
-      }
+    }
 
-      if(existingShape.type == "ellipse"){
-          const x1 = existingShape.startX;
-          const y1 = existingShape.startY;
-          const radius = existingShape.radius;
-          const truth = (x - x1)**2 + (y - y1)**2 <= radius**2;
-          return truth;
-      }
-      else if(existingShape.type == "rectangle"){
+    if (existingShape.type == "ellipse") {
+        const x1 = existingShape.startX;
+        const y1 = existingShape.startY;
+        const radius = existingShape.radius;
+        const truth = (x - x1) ** 2 + (y - y1) ** 2 <= radius ** 2;
+        return truth;
+    }
+    else if (existingShape.type == "rectangle") {
         const x1 = existingShape.startX;
         const y1 = existingShape.startY;
         const x2 = existingShape.width + existingShape.startX;
         const y2 = existingShape.height + existingShape.startY;
-        const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
+        const truth = x >= Math.min(x1, x2) && x <= Math.max(x1, x2) && y >= Math.min(y1, y2) && y <= Math.max(y1, y2);
         return truth;
-      }
-      else{
+    }
+    else {
         const x1 = existingShape.startX;
         const y1 = existingShape.startY;
         const x2 = existingShape.moveX;
         const y2 = existingShape.moveY;
-        const truth =  x>=Math.min(x1, x2) && x<=Math.max(x1, x2) && y>=Math.min(y1, y2)&& y<=Math.max(y1, y2);
+        const truth = x >= Math.min(x1, x2) && x <= Math.max(x1, x2) && y >= Math.min(y1, y2) && y <= Math.max(y1, y2);
         return truth;
-      }
+    }
 }
 
 const drawShapesBeforeClear = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, existingShape: ExistingShape[]) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.fillStyle= "white"
-    // ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     existingShape.map((shape: ExistingShape) => {
         ctx.strokeStyle = shape.color;

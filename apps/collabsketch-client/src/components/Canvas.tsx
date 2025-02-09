@@ -26,9 +26,7 @@ const Canvas = ({socket, roomid}:{socket: WebSocket, roomid:any}) => {
           drawShape(canvas, socket, roomid, tool, color, stroke);
         }
         return()=>{};
-    },[canvasRef, color, stroke, tool]);
-
-
+    },[canvasRef, color, stroke, tool]); 
   return (
     <div className='absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]'>
         <Toolbar  
@@ -46,8 +44,8 @@ const Canvas = ({socket, roomid}:{socket: WebSocket, roomid:any}) => {
         {tool=="eraser" && <CustomCursor/>}
         <canvas
           ref={canvasRef}
-          height={580}
-          width={1280}
+          height={980}
+          width={1780}
           className={` bg-white bg-[linear-gradient(to_right,#ede4e4_1px,transparent_1px),linear-gradient(to_bottom,#ede4e4_1px,transparent_1px)] bg-[size:6rem_4rem]`}
         />
     </div>
