@@ -209,7 +209,7 @@ export const drawShape = async (
             }
             else if (tool == "eraser") {
                 existingShape = existingShape.filter((shape) => {
-                    return !findInterSection(event.clientX-rect.left, event.clientY-rect.left, shape);
+                    return !findInterSection(event.clientX-rect.left, event.clientY-rect.top, shape);
                 });
             }
         }
