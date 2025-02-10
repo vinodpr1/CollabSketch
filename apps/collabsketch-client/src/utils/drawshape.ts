@@ -8,57 +8,68 @@ interface Pencil {
 
 type ExistingShape =
   | {
-      type: "rectangle";
-      color: string;
-      stroke: number;
-      startX: number;
-      startY: number;
-      width: number;
-      height: number;
-    }
+    type: "rectangle";
+    color: string;
+    stroke: number;
+    startX: number;
+    startY: number;
+    width: number;
+    height: number;
+  }
   | {
-      type: "ellipse";
-      color: string;
-      stroke: number;
-      startX: number;
-      startY: number;
-      radius: number;
-    }
+    type: "ellipse";
+    color: string;
+    stroke: number;
+    startX: number;
+    startY: number;
+    radius: number;
+  }
   | {
-      type: "line";
-      color: string;
-      stroke: number;
-      startX: number;
-      startY: number;
-      moveX: number;
-      moveY: number;
-    }
+    type: "line";
+    color: string;
+    stroke: number;
+    startX: number;
+    startY: number;
+    moveX: number;
+    moveY: number;
+  }
   | {
-      type: "pencil";
-      color: string;
-      stroke: number;
-      path: any;
-    }
+    type: "pencil";
+    color: string;
+    stroke: number;
+    path: any;
+  }
   | {
-      type: "arrow";
-      color: string;
-      stroke: number;
-      startX: number;
-      startY: number;
-      moveX: number;
-      moveY: number;
-    }
+    type: "arrow";
+    color: string;
+    stroke: number;
+    startX: number;
+    startY: number;
+    moveX: number;
+    moveY: number;
+  }
   | {
-      type: "text";
-      color: string;
-      stroke: number;
-      startX: number;
-      startY: number;
-      text: string;
-    };
+    type: "text";
+    color: string;
+    stroke: number;
+    startX: number;
+    startY: number;
+    text: string;
+  };
 
 let existingShape: ExistingShape[] = [];
 let pencilPath: Pencil[] = [];
+
+let scale = 1; // Initial scale
+let minScale = .5;
+let maxScale = 2;
+let offsetX = 0;
+let offsetY = 0;
+
+const zoomFactor = 1.04; // Zoom factor (10% zoom per step)
+const zoomSpeed = 0.1;
+
+
 
 export const drawShape = (
   canvas: HTMLCanvasElement,
@@ -68,8 +79,12 @@ export const drawShape = (
   color: string,
   stroke: number,
 ) => {
+
+
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+
+  drawShapesBeforeClear(ctx, canvas, existingShape);
 
   let startX = 0;
   let startY = 0;
@@ -83,6 +98,7 @@ export const drawShape = (
     canvas.removeEventListener("mousedown", previousListeners.mousedown);
     canvas.removeEventListener("mouseup", previousListeners.mouseup);
     canvas.removeEventListener("mousemove", previousListeners.mousemove);
+    canvas.removeEventListener("wheel", previousListeners.wheel);
   }
 
   // Define event handlers
@@ -224,16 +240,43 @@ export const drawShape = (
     }
   };
 
+
+
+  const handleZoom = (event: WheelEvent) => {
+
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault(); // Prevents the page from scrolling
+      const direction = event.deltaY < 0 ? "in" : "out"; // Zoom in if scrolling up, out if scrolling down
+      const rect = canvas.getBoundingClientRect();
+
+      offsetX = event.clientX - rect.left; // Get X position relative to canvas
+      offsetY = event.clientY - rect.top;  // Get Y position relative to canvas
+
+      let deltaY = event?.deltaY;
+      if (deltaY < 0 && scale <= maxScale) {
+        zoom(direction, offsetX, offsetY, ctx, canvas); // Zoom in
+        deltaY = 0;
+      } else if (deltaY > 0 && scale >= minScale) {
+        zoom(direction, offsetX, offsetY, ctx, canvas); // Zoom out
+        deltaY = 0;
+      }
+    }
+
+  };
+
   // Attach new event listeners
   canvas.addEventListener("mousedown", handleMouseDown);
   canvas.addEventListener("mouseup", handleMouseUp);
   canvas.addEventListener("mousemove", handleMouseMove);
+  // passivw - allows preventdefault to work
+  canvas.addEventListener("wheel", handleZoom, { passive: false });
 
   // Save new event listeners reference
   (canvas as any)._eventListeners = {
     mousedown: handleMouseDown,
     mouseup: handleMouseUp,
     mousemove: handleMouseMove,
+    wheel: handleZoom
   };
 };
 
@@ -365,3 +408,18 @@ const getShapes = async (roomid: any) => {
   });
   return parsedChat;
 };
+
+const zoom = (direction: string, offsetX: number, offsetY: number, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+  if (direction === 'in') {
+    scale *= zoomFactor;
+  } else if (direction === 'out') {
+    scale /= zoomFactor;
+  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(scale, scale);
+  ctx.translate(-offsetX, -offsetY);
+  drawShapesBeforeClear(ctx, canvas, existingShape);
+  ctx.restore();
+}
