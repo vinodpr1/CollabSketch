@@ -8,74 +8,72 @@ interface Pencil {
 
 type ExistingShape =
   | {
-    id: number,
-    type: "rectangle";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    width: number;
-    height: number;
-  }
+      id: number;
+      type: "rectangle";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      width: number;
+      height: number;
+    }
   | {
-    id: number,
-    type: "ellipse";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    radius: number;
-  }
+      id: number;
+      type: "ellipse";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      radius: number;
+    }
   | {
-    id: number,
-    type: "line";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    moveX: number;
-    moveY: number;
-  }
+      id: number;
+      type: "line";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      moveX: number;
+      moveY: number;
+    }
   | {
-    id: number,
-    type: "pencil";
-    color: string;
-    stroke: number;
-    path: any;
-  }
+      id: number;
+      type: "pencil";
+      color: string;
+      stroke: number;
+      path: any;
+    }
   | {
-    id: number,
-    type: "arrow";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    moveX: number;
-    moveY: number;
-  }
+      id: number;
+      type: "arrow";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      moveX: number;
+      moveY: number;
+    }
   | {
-    id: number,
-    type: "text";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    text: string;
-  };
+      id: number;
+      type: "text";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      text: string;
+    };
 
 let existingShape: ExistingShape[] = [];
 let pencilPath: Pencil[] = [];
 
 let scale = 1; // Initial scale
-let minScale = .5;
+let minScale = 0.5;
 let maxScale = 2;
 let offsetX = 0;
 let offsetY = 0;
 
 const zoomFactor = 1.04; // Zoom factor (10% zoom per step)
 const zoomSpeed = 0.1;
-
-
 
 export const drawShape = (
   canvas: HTMLCanvasElement,
@@ -85,8 +83,6 @@ export const drawShape = (
   color: string,
   stroke: number,
 ) => {
-
-
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
@@ -95,7 +91,7 @@ export const drawShape = (
   let startX = 0;
   let startY = 0;
   let clicked = false;
-  let selectedShape:ExistingShape | undefined;
+  let selectedShape: ExistingShape | undefined;
   let slecteOffsetX = 0;
   let slecteOffsetY = 0;
   let slectedX = 0;
@@ -116,21 +112,23 @@ export const drawShape = (
   const handleMouseDown = (event: MouseEvent) => {
     clicked = true;
     const rect = canvas.getBoundingClientRect();
-    if(tool=="select"){
+    if (tool == "select") {
+      selectedShape = existingShape.find((shape) => {
+        if (shape.type != "pencil") {
+          slecteOffsetX = event.clientX - shape?.startX;
+          slecteOffsetY = event.clientY - shape?.startY;
+        }
+        return findInterSection(
+          event.clientX - rect.left,
+          event.clientY - rect.top,
+          shape,
+        );
+      });
 
-        selectedShape = existingShape.find((shape)=>{
-            if(shape.type!="pencil"){
-              slecteOffsetX = event.clientX - shape?.startX;
-              slecteOffsetY = event.clientY - shape?.startY;
-            }
-            return findInterSection(event.clientX - rect.left, event.clientY - rect.top, shape);
-        })
-
-       if(selectedShape){
-         document.getElementsByTagName("body")[0].style.cursor = "move"
-       }
-
-    }else{
+      if (selectedShape) {
+        document.getElementsByTagName("body")[0].style.cursor = "move";
+      }
+    } else {
       startX = event.clientX - rect.left;
       startY = event.clientY - rect.top;
     }
@@ -177,7 +175,13 @@ export const drawShape = (
       };
     } else if (tool === "pencil") {
       // console.log("pencil path", pencilPath);
-      shape = { id: existingShape.length, type: "pencil", color: color, stroke: 1, path: pencilPath };
+      shape = {
+        id: existingShape.length,
+        type: "pencil",
+        color: color,
+        stroke: 1,
+        path: pencilPath,
+      };
       pencilPath = [];
     } else if (tool === "arrow") {
       shape = {
@@ -190,9 +194,9 @@ export const drawShape = (
         moveX: event.clientX - rect.left,
         moveY: event.clientY - rect.top,
       };
-    } else if(tool == "select") {
+    } else if (tool == "select") {
       document.getElementsByTagName("body")[0].style.cursor = "";
-      if(!selectedShape) return;
+      if (!selectedShape) return;
       existingShape.push(selectedShape);
       selectedShape = undefined;
     }
@@ -205,7 +209,6 @@ export const drawShape = (
       existingShape.push(JSON.parse(event.data));
       drawShapesBeforeClear(ctx, canvas, existingShape);
     };
-
   };
 
   const handleMouseMove = (event: MouseEvent) => {
@@ -257,7 +260,6 @@ export const drawShape = (
           event.clientY - rect.top - arrowLen * Math.sin(angle + Math.PI / 6),
         );
         ctx.stroke();
-
       } else if (tool === "pencil") {
         const currentX = event.clientX - rect.left;
         const currentY = event.clientY - rect.top;
@@ -276,90 +278,101 @@ export const drawShape = (
             shape,
           );
         });
-      }
-      else if(tool=="select"){
+      } else if (tool == "select") {
+        if (!selectedShape) return;
 
-        if(!selectedShape) return;
-      
         existingShape = existingShape.filter((shape) => {
-           return shape.id !== selectedShape?.id
+          return shape.id !== selectedShape?.id;
         });
 
-        if(selectedShape.type=="rectangle"){
-
+        if (selectedShape.type == "rectangle") {
           ctx.strokeStyle = selectedShape.color;
           ctx.lineWidth = selectedShape.stroke;
-          ctx.strokeRect(event.clientX - rect.left- slecteOffsetX, event.clientY- rect.top - slecteOffsetY, selectedShape.width, selectedShape.height);
-          selectedShape.startX = event.clientX - rect.left- slecteOffsetX;
-          selectedShape.startY = event.clientY - rect.left- slecteOffsetY;
-
-        } else if(selectedShape.type=="ellipse"){
-          
+          ctx.strokeRect(
+            event.clientX - rect.left - slecteOffsetX,
+            event.clientY - rect.top - slecteOffsetY,
+            selectedShape.width,
+            selectedShape.height,
+          );
+          selectedShape.startX = event.clientX - rect.left - slecteOffsetX;
+          selectedShape.startY = event.clientY - rect.left - slecteOffsetY;
+        } else if (selectedShape.type == "ellipse") {
           ctx.strokeStyle = selectedShape.color;
           ctx.lineWidth = selectedShape.stroke;
           ctx.beginPath();
-          ctx.arc(event.clientX - rect.left - slecteOffsetX, event.clientY- rect.top - slecteOffsetY, selectedShape.radius, 0, 2 * Math.PI);
+          ctx.arc(
+            event.clientX - rect.left - slecteOffsetX,
+            event.clientY - rect.top - slecteOffsetY,
+            selectedShape.radius,
+            0,
+            2 * Math.PI,
+          );
           ctx.stroke();
           ctx.closePath();
 
-          selectedShape.startX = event.clientX - rect.left- slecteOffsetX;
-          selectedShape.startY = event.clientY - rect.left- slecteOffsetY;
-      
-        } else if(selectedShape.type=="line"){
-          
-          console.log("line is selected", selectedShape, event.clientX, event.clientY);
+          selectedShape.startX = event.clientX - rect.left - slecteOffsetX;
+          selectedShape.startY = event.clientY - rect.left - slecteOffsetY;
+        } else if (selectedShape.type == "line") {
+          console.log(
+            "line is selected",
+            selectedShape,
+            event.clientX,
+            event.clientY,
+          );
 
           ctx.strokeStyle = selectedShape.color;
           ctx.lineWidth = selectedShape.stroke;
           ctx.beginPath();
-      
+
           // Calculate new start and end positions based on movement
-          let newStartX = event.clientX - rect.left ;
-          let newStartY = event.clientY - rect.top ;
-          let newEndX = newStartX + (selectedShape.moveX - selectedShape.startX);
-          let newEndY = newStartY + (selectedShape.moveY - selectedShape.startY);
-      
-          ctx.moveTo(newStartX-slecteOffsetX, newStartY-slecteOffsetY);
-          ctx.lineTo(newEndX-slecteOffsetX, newEndY- slecteOffsetY);
+          let newStartX = event.clientX - rect.left;
+          let newStartY = event.clientY - rect.top;
+          let newEndX =
+            newStartX + (selectedShape.moveX - selectedShape.startX);
+          let newEndY =
+            newStartY + (selectedShape.moveY - selectedShape.startY);
+
+          ctx.moveTo(newStartX - slecteOffsetX, newStartY - slecteOffsetY);
+          ctx.lineTo(newEndX - slecteOffsetX, newEndY - slecteOffsetY);
           ctx.stroke();
           ctx.closePath();
-      
+
           // Update shape's new position
           selectedShape.startX = newStartX - slecteOffsetX;
           selectedShape.startY = newStartY - slecteOffsetY;
           selectedShape.moveX = newEndX - slecteOffsetX;
           selectedShape.moveY = newEndY - slecteOffsetY;
-        }else if( selectedShape.type=="arrow" ){
-  
+        } else if (selectedShape.type == "arrow") {
           ctx.strokeStyle = selectedShape.color;
           ctx.lineWidth = selectedShape.stroke;
           ctx.beginPath();
-    
+
           // Calculate new start and end positions based on movement
-          let newStartX = event.clientX - rect.left ;
-          let newStartY = event.clientY - rect.top ;
-          let newEndX = newStartX + (selectedShape.moveX - selectedShape.startX);
-          let newEndY = newStartY + (selectedShape.moveY - selectedShape.startY);
-      
+          let newStartX = event.clientX - rect.left;
+          let newStartY = event.clientY - rect.top;
+          let newEndX =
+            newStartX + (selectedShape.moveX - selectedShape.startX);
+          let newEndY =
+            newStartY + (selectedShape.moveY - selectedShape.startY);
+
           ctx.beginPath();
-          ctx.moveTo(newStartX-slecteOffsetX, newStartY - slecteOffsetY);
-          ctx.lineTo(newEndX -slecteOffsetX, newEndY - slecteOffsetY);
+          ctx.moveTo(newStartX - slecteOffsetX, newStartY - slecteOffsetY);
+          ctx.lineTo(newEndX - slecteOffsetX, newEndY - slecteOffsetY);
           ctx.stroke();
           ctx.closePath();
-         
+
           const arrowLen = 10;
           let dx = newEndX - newStartX;
           let dy = newEndY - newStartY;
           let angle = Math.atan2(dy, dx);
-          
-          ctx.moveTo(newEndX-slecteOffsetX , newEndY-slecteOffsetY);
+
+          ctx.moveTo(newEndX - slecteOffsetX, newEndY - slecteOffsetY);
           ctx.lineTo(
             newEndX - slecteOffsetX - arrowLen * Math.cos(angle - Math.PI / 6),
             newEndY - slecteOffsetY - arrowLen * Math.sin(angle - Math.PI / 6),
           );
           ctx.stroke();
 
-      
           ctx.moveTo(newEndX - slecteOffsetX, newEndY - slecteOffsetY);
           ctx.lineTo(
             newEndX - slecteOffsetX - arrowLen * Math.cos(angle + Math.PI / 6),
@@ -368,30 +381,24 @@ export const drawShape = (
 
           ctx.stroke();
 
-
-
           // Update shape's new position
-          selectedShape.startX = newStartX -slecteOffsetX;
+          selectedShape.startX = newStartX - slecteOffsetX;
           selectedShape.startY = newStartY - slecteOffsetY;
           selectedShape.moveX = newEndX - slecteOffsetX;
           selectedShape.moveY = newEndY - slecteOffsetY;
-
+        }
       }
     }
-  }
-};
-
-
+  };
 
   const handleZoom = (event: WheelEvent) => {
-
     if (event.ctrlKey || event.metaKey) {
       event.preventDefault(); // Prevents the page from scrolling
       const direction = event.deltaY < 0 ? "in" : "out"; // Zoom in if scrolling up, out if scrolling down
       const rect = canvas.getBoundingClientRect();
 
       offsetX = event.clientX - rect.left; // Get X position relative to canvas
-      offsetY = event.clientY - rect.top;  // Get Y position relative to canvas
+      offsetY = event.clientY - rect.top; // Get Y position relative to canvas
 
       let deltaY = event?.deltaY;
       if (deltaY < 0 && scale <= maxScale) {
@@ -402,7 +409,6 @@ export const drawShape = (
         deltaY = 0;
       }
     }
-
   };
 
   // Attach new event listeners
@@ -417,15 +423,9 @@ export const drawShape = (
     mousedown: handleMouseDown,
     mouseup: handleMouseUp,
     mousemove: handleMouseMove,
-    wheel: handleZoom
+    wheel: handleZoom,
   };
 };
-
-
-
-
-
-
 
 const findInterSection = (x: any, y: any, existingShape: any) => {
   // if (existingShape.type == "pencil") {
@@ -478,14 +478,6 @@ const findInterSection = (x: any, y: any, existingShape: any) => {
     return truth;
   }
 };
-
-
-
-
-
-
-
-
 
 const drawShapesBeforeClear = (
   ctx: CanvasRenderingContext2D,
@@ -564,10 +556,16 @@ const getShapes = async (roomid: any) => {
   return parsedChat;
 };
 
-const zoom = (direction: string, offsetX: number, offsetY: number, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-  if (direction === 'in') {
+const zoom = (
+  direction: string,
+  offsetX: number,
+  offsetY: number,
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+) => {
+  if (direction === "in") {
     scale *= zoomFactor;
-  } else if (direction === 'out') {
+  } else if (direction === "out") {
     scale /= zoomFactor;
   }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -577,4 +575,4 @@ const zoom = (direction: string, offsetX: number, offsetY: number, ctx: CanvasRe
   ctx.translate(-offsetX, -offsetY);
   drawShapesBeforeClear(ctx, canvas, existingShape);
   ctx.restore();
-}
+};

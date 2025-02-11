@@ -8,7 +8,7 @@ import {
   Undo2,
   Redo2,
   Minus,
-  MousePointer
+  MousePointer,
 } from "lucide-react";
 import { Tool } from "@/hooks/useDraw";
 
