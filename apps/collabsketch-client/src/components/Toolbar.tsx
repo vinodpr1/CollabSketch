@@ -8,6 +8,7 @@ import {
   Undo2,
   Redo2,
   Minus,
+  MousePointer
 } from "lucide-react";
 import { Tool } from "@/hooks/useDraw";
 
@@ -26,6 +27,7 @@ const Toolbar = ({ setTool, tool }: ToolProps) => {
     { id: "arrow" as Tool, icon: MoveUpRight },
     { id: "text" as Tool, icon: Type },
     { id: "eraser" as Tool, icon: Eraser },
+    { id: "select" as Tool, icon: MousePointer },
   ];
 
   return (

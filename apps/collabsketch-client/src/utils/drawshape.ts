@@ -8,6 +8,7 @@ interface Pencil {
 
 type ExistingShape =
   | {
+    id: number,
     type: "rectangle";
     color: string;
     stroke: number;
@@ -17,6 +18,7 @@ type ExistingShape =
     height: number;
   }
   | {
+    id: number,
     type: "ellipse";
     color: string;
     stroke: number;
@@ -25,6 +27,7 @@ type ExistingShape =
     radius: number;
   }
   | {
+    id: number,
     type: "line";
     color: string;
     stroke: number;
@@ -34,12 +37,14 @@ type ExistingShape =
     moveY: number;
   }
   | {
+    id: number,
     type: "pencil";
     color: string;
     stroke: number;
     path: any;
   }
   | {
+    id: number,
     type: "arrow";
     color: string;
     stroke: number;
@@ -49,6 +54,7 @@ type ExistingShape =
     moveY: number;
   }
   | {
+    id: number,
     type: "text";
     color: string;
     stroke: number;
@@ -89,6 +95,9 @@ export const drawShape = (
   let startX = 0;
   let startY = 0;
   let clicked = false;
+  let selectedShape:ExistingShape | undefined;
+  let slecteOffsetX = 0;
+  let slecteOffsetY = 0;
 
   // Store previous event listeners to remove them properly
   const previousListeners = (canvas as any)._eventListeners || {};
@@ -105,8 +114,24 @@ export const drawShape = (
   const handleMouseDown = (event: MouseEvent) => {
     clicked = true;
     const rect = canvas.getBoundingClientRect();
-    startX = event.clientX - rect.left;
-    startY = event.clientY - rect.top;
+    if(tool=="select"){
+
+        selectedShape = existingShape.find((shape)=>{
+            if(shape.type!="pencil"){
+              slecteOffsetX = event.clientX - shape?.startX;
+              slecteOffsetY = event.clientY - shape?.startY;
+            }
+            return findInterSection(event.clientX - rect.left, event.clientY - rect.top, shape);
+        })
+
+       if(selectedShape){
+         document.getElementsByTagName("body")[0].style.cursor = "move"
+       }
+
+    }else{
+      startX = event.clientX - rect.left;
+      startY = event.clientY - rect.top;
+    }
   };
 
   const handleMouseUp = (event: MouseEvent) => {
@@ -117,6 +142,7 @@ export const drawShape = (
     let shape: ExistingShape | null = null;
     if (tool === "rectangle") {
       shape = {
+        id: existingShape.length,
         type: "rectangle",
         color: color,
         stroke: stroke,
@@ -128,6 +154,7 @@ export const drawShape = (
     } else if (tool === "ellipse") {
       const radius = Math.sqrt(width ** 2 + height ** 2);
       shape = {
+        id: existingShape.length,
         type: "ellipse",
         color: color,
         stroke: stroke,
@@ -137,6 +164,7 @@ export const drawShape = (
       };
     } else if (tool === "line") {
       shape = {
+        id: existingShape.length,
         type: "line",
         color: color,
         stroke: stroke,
@@ -147,10 +175,11 @@ export const drawShape = (
       };
     } else if (tool === "pencil") {
       // console.log("pencil path", pencilPath);
-      shape = { type: "pencil", color: color, stroke: 1, path: pencilPath };
+      shape = { id: existingShape.length, type: "pencil", color: color, stroke: 1, path: pencilPath };
       pencilPath = [];
     } else if (tool === "arrow") {
       shape = {
+        id: existingShape.length,
         type: "arrow",
         color: color,
         stroke: stroke,
@@ -159,6 +188,11 @@ export const drawShape = (
         moveX: event.clientX - rect.left,
         moveY: event.clientY - rect.top,
       };
+    } else if(tool == "select") {
+      document.getElementsByTagName("body")[0].style.cursor = "";
+      if(!selectedShape) return;
+      existingShape.push(selectedShape);
+      selectedShape = undefined;
     }
 
     if (!shape) return;
@@ -169,6 +203,7 @@ export const drawShape = (
       existingShape.push(JSON.parse(event.data));
       drawShapesBeforeClear(ctx, canvas, existingShape);
     };
+
   };
 
   const handleMouseMove = (event: MouseEvent) => {
@@ -237,6 +272,35 @@ export const drawShape = (
           );
         });
       }
+      else if(tool=="select"){
+
+        if(!selectedShape) return;
+      
+        existingShape = existingShape.filter((shape) => {
+           return shape.id !== selectedShape?.id
+        });
+
+        if(selectedShape.type=="rectangle"){
+
+          ctx.strokeStyle = selectedShape.color;
+          ctx.strokeRect(event.clientX - rect.left- slecteOffsetX, event.clientY- rect.top - slecteOffsetY, selectedShape.width, selectedShape.height);
+          selectedShape.startX = event.clientX - rect.left- slecteOffsetX;
+          selectedShape.startY = event.clientY - rect.left- slecteOffsetY;
+
+        } else if(selectedShape.type=="ellipse"){
+          
+          ctx.strokeStyle = selectedShape.color;
+          ctx.beginPath();
+          ctx.arc(event.clientX - rect.left - slecteOffsetX, event.clientY- rect.top - slecteOffsetY, selectedShape.radius, 0, 2 * Math.PI);
+          ctx.stroke();
+          ctx.closePath();
+
+          selectedShape.startX = event.clientX - rect.left- slecteOffsetX;
+          selectedShape.startY = event.clientY - rect.left- slecteOffsetY;
+      
+        } 
+         
+      }
     }
   };
 
@@ -280,26 +344,32 @@ export const drawShape = (
   };
 };
 
+
+
+
+
+
+
 const findInterSection = (x: any, y: any, existingShape: any) => {
-  if (existingShape.type == "pencil") {
-    //  console.log("Pencil", x, y , existingShape);
+  // if (existingShape.type == "pencil") {
+  //   //  console.log("Pencil", x, y , existingShape);
 
-    let truth = false;
-    for (let i = 0; i < existingShape.path.length; i++) {
-      const points = existingShape.path[i];
-      console.log("Points", points);
-      if (
-        points.x <= x - 10 &&
-        points.x + 10 >= x &&
-        points.y <= y - 10 &&
-        points.y + 10 >= y
-      ) {
-        truth = true;
-      }
-    }
+  //   let truth = false;
+  //   for (let i = 0; i < existingShape.path.length; i++) {
+  //     const points = existingShape.path[i];
+  //     console.log("Points", points);
+  //     if (
+  //       points.x <= x - 10 &&
+  //       points.x + 10 >= x &&
+  //       points.y <= y - 10 &&
+  //       points.y + 10 >= y
+  //     ) {
+  //       truth = true;
+  //     }
+  //   }
 
-    return truth;
-  }
+  //   return truth;
+  // }
 
   if (existingShape.type == "ellipse") {
     const x1 = existingShape.startX;
@@ -331,6 +401,14 @@ const findInterSection = (x: any, y: any, existingShape: any) => {
     return truth;
   }
 };
+
+
+
+
+
+
+
+
 
 const drawShapesBeforeClear = (
   ctx: CanvasRenderingContext2D,
