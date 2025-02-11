@@ -7,7 +7,8 @@
     "build": "tsc -b",
     "start": "nodemon dist/index.js",
     "dev": "pnpm run build && pnpm run start",
-    "lint":"pnpm eslint"
+    "lint":"pnpm eslint",
+    "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
