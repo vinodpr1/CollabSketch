@@ -98,6 +98,8 @@ export const drawShape = (
   let selectedShape:ExistingShape | undefined;
   let slecteOffsetX = 0;
   let slecteOffsetY = 0;
+  let slectedX = 0;
+  let slectedY = 0;
 
   // Store previous event listeners to remove them properly
   const previousListeners = (canvas as any)._eventListeners || {};
@@ -298,7 +300,72 @@ export const drawShape = (
           selectedShape.startX = event.clientX - rect.left- slecteOffsetX;
           selectedShape.startY = event.clientY - rect.left- slecteOffsetY;
       
-        } 
+        } else if(selectedShape.type=="line"){
+          
+          console.log("line is selected", selectedShape, event.clientX, event.clientY);
+
+          ctx.strokeStyle = selectedShape.color;
+          ctx.beginPath();
+      
+          // Calculate new start and end positions based on movement
+          let newStartX = event.clientX - rect.left ;
+          let newStartY = event.clientY - rect.top ;
+          let newEndX = newStartX + (selectedShape.moveX - selectedShape.startX);
+          let newEndY = newStartY + (selectedShape.moveY - selectedShape.startY);
+      
+          ctx.moveTo(newStartX, newStartY);
+          ctx.lineTo(newEndX, newEndY);
+          ctx.stroke();
+          ctx.closePath();
+      
+          // Update shape's new position
+          selectedShape.startX = newStartX;
+          selectedShape.startY = newStartY;
+          selectedShape.moveX = newEndX;
+          selectedShape.moveY = newEndY;
+        }else if( selectedShape.type=="arrow" ){
+  
+
+          ctx.strokeStyle = selectedShape.color;
+          ctx.beginPath();
+      
+          // Calculate new start and end positions based on movement
+          let newStartX = event.clientX - rect.left ;
+          let newStartY = event.clientY - rect.top ;
+          let newEndX = newStartX + (selectedShape.moveX - selectedShape.startX);
+          let newEndY = newStartY + (selectedShape.moveY - selectedShape.startY);
+      
+          ctx.beginPath();
+          ctx.moveTo(newStartX, newStartY);
+          ctx.lineTo(newEndX, newEndY);
+          ctx.stroke();
+          ctx.closePath();
+  
+          const arrowLen = 10;
+          let dx = newEndX - startX;
+          let dy = newEndY - startY;
+          let angle = Math.atan2(dy, dx);
+
+          ctx.moveTo(newEndX, newEndY);
+          ctx.lineTo(
+            newEndX - arrowLen * Math.cos(angle - Math.PI / 6),
+            newEndY - arrowLen * Math.sin(angle - Math.PI / 6),
+          );
+          ctx.stroke();
+
+          ctx.moveTo(newEndX, newEndY);
+          ctx.lineTo(
+            newEndX - arrowLen * Math.cos(angle + Math.PI / 6),
+            newEndY - arrowLen * Math.sin(angle + Math.PI / 6),
+          );
+          ctx.stroke();
+      
+          // Update shape's new position
+          selectedShape.startX = newStartX;
+          selectedShape.startY = newStartY;
+          selectedShape.moveX = newEndX;
+          selectedShape.moveY = newEndY;
+        }
          
       }
     }
