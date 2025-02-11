@@ -428,25 +428,25 @@ export const drawShape = (
 };
 
 const findInterSection = (x: any, y: any, existingShape: any) => {
-  // if (existingShape.type == "pencil") {
-  //   //  console.log("Pencil", x, y , existingShape);
+  if (existingShape.type == "pencil") {
+    //  console.log("Pencil", x, y , existingShape);
 
-  //   let truth = false;
-  //   for (let i = 0; i < existingShape.path.length; i++) {
-  //     const points = existingShape.path[i];
-  //     console.log("Points", points);
-  //     if (
-  //       points.x <= x - 10 &&
-  //       points.x + 10 >= x &&
-  //       points.y <= y - 10 &&
-  //       points.y + 10 >= y
-  //     ) {
-  //       truth = true;
-  //     }
-  //   }
+    let truth = false;
+    for (let i = 0; i < existingShape.path.length; i++) {
+      const points = existingShape.path[i];
+      console.log("Points", points);
+      if (
+        points.x <= x - 10 &&
+        points.x + 10 >= x &&
+        points.y <= y - 10 &&
+        points.y + 10 >= y
+      ) {
+        truth = true;
+      }
+    }
 
-  //   return truth;
-  // }
+    return truth;
+  }
 
   if (existingShape.type == "ellipse") {
     const x1 = existingShape.startX;
