@@ -105,6 +105,8 @@ export const drawShape = (
   let ELL = false;
   let ELT = false;
   let ELB = false;
+  let LNS = false;
+  let LNE = false;
 
   // Store previous event listeners to remove them properly
   const previousListeners = (canvas as any)._eventListeners || {};
@@ -293,6 +295,46 @@ export const drawShape = (
         } else if (ELT || ELB) {
           document.getElementsByTagName("body")[0].style.cursor = "n-resize";
         }
+      } else if (selectedShape?.type == "line"){
+
+        ctx.strokeStyle="blue";
+        ctx.beginPath();
+        ctx.arc(selectedShape.startX,selectedShape.startY, 5, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.strokeStyle="blue";
+        ctx.beginPath();
+        ctx.arc(selectedShape.moveX,selectedShape.moveY, 5, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+
+        const shape1 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.moveX,
+          startY: selectedShape.moveY,
+          radius: 5,
+        };
+
+        const shape2 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.startX,
+          startY: selectedShape.startY,
+          radius: 5,
+        };
+      
+         LNS = findInterSection(event.clientX, event.clientY, shape1);
+         LNE = findInterSection(event.clientX, event.clientY, shape2);
+
+        if(LNS || LNE){
+          document.getElementsByTagName("body")[0].style.cursor = "pointer";
+        }
       }
     } else {
       startX = event.clientX - rect.left;
@@ -451,7 +493,7 @@ export const drawShape = (
           return shape.id !== selectedShape?.id;
         });
 
-        if (!TL && !TR && !BL && !BR && !ELR && !ELL && !ELT && !ELB) {
+        if (!TL && !TR && !BL && !BR && !ELR && !ELL && !ELT && !ELB && !LNS && !LNE) {
           if (selectedShape.type == "rectangle") {
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
@@ -643,7 +685,36 @@ export const drawShape = (
             ctx.closePath();
 
             selectedShape.radius = radius;
-          }
+          } else if(selectedShape.type == "line" && LNS) {
+          
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
+
+            ctx.beginPath();
+            ctx.moveTo(selectedShape.startX, selectedShape.startY);
+            ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
+            ctx.stroke();
+            ctx.closePath();
+
+            selectedShape.moveX = event.clientX - rect.left;
+            selectedShape.moveY = event.clientY - rect.top;
+          
+          } else if(selectedShape.type == "line" && LNE) {
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
+
+            ctx.beginPath();
+            ctx.moveTo(selectedShape.moveX, selectedShape.moveY);
+            ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
+            ctx.stroke();
+            ctx.closePath();
+
+            // selectedShape.startX = selectedShape.moveX ;
+            // selectedShape.startY = selectedShape.moveY;
+            selectedShape.startX = event.clientX - rect.left;
+            selectedShape.startY = event.clientY - rect.top;
+
+         }
         }
       }
     }
