@@ -8,60 +8,60 @@ interface Pencil {
 
 type ExistingShape =
   | {
-    id: number;
-    type: "rectangle";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    width: number;
-    height: number;
-  }
+      id: number;
+      type: "rectangle";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      width: number;
+      height: number;
+    }
   | {
-    id: number;
-    type: "ellipse";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    radius: number;
-  }
+      id: number;
+      type: "ellipse";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      radius: number;
+    }
   | {
-    id: number;
-    type: "line";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    moveX: number;
-    moveY: number;
-  }
+      id: number;
+      type: "line";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      moveX: number;
+      moveY: number;
+    }
   | {
-    id: number;
-    type: "pencil";
-    color: string;
-    stroke: number;
-    path: any;
-  }
+      id: number;
+      type: "pencil";
+      color: string;
+      stroke: number;
+      path: any;
+    }
   | {
-    id: number;
-    type: "arrow";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    moveX: number;
-    moveY: number;
-  }
+      id: number;
+      type: "arrow";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      moveX: number;
+      moveY: number;
+    }
   | {
-    id: number;
-    type: "text";
-    color: string;
-    stroke: number;
-    startX: number;
-    startY: number;
-    text: string;
-  };
+      id: number;
+      type: "text";
+      color: string;
+      stroke: number;
+      startX: number;
+      startY: number;
+      text: string;
+    };
 
 let existingShape: ExistingShape[] = [];
 let pencilPath: Pencil[] = [];
@@ -101,6 +101,10 @@ export const drawShape = (
   let TR = false;
   let BL = false;
   let BR = false;
+  let ELR = false;
+  let ELL = false;
+  let ELT = false;
+  let ELB = false;
 
   // Store previous event listeners to remove them properly
   const previousListeners = (canvas as any)._eventListeners || {};
@@ -118,7 +122,6 @@ export const drawShape = (
     clicked = true;
     const rect = canvas.getBoundingClientRect();
     if (tool == "select") {
-
       selectedShape = existingShape.find((shape) => {
         if (shape.type != "pencil") {
           slecteOffsetX = event.clientX - shape?.startX;
@@ -136,13 +139,8 @@ export const drawShape = (
       }
 
       if (selectedShape?.type == "rectangle") {
-
         const zoneX1 = selectedShape.startX;
         const zoneY1 = selectedShape.startY;
-
-        // ctx.beginPath();
-        // ctx.arc(zoneX1, zoneY1, 20, 0, 2 * Math.PI);
-        // ctx.stroke();
 
         const shape1 = {
           id: -1,
@@ -151,7 +149,7 @@ export const drawShape = (
           stroke: stroke,
           startX: zoneX1,
           startY: zoneY1,
-          radius: 20
+          radius: 20,
         };
 
         const shape2 = {
@@ -161,7 +159,7 @@ export const drawShape = (
           stroke: stroke,
           startX: zoneX1 + selectedShape.width,
           startY: zoneY1 + selectedShape.height,
-          radius: 20
+          radius: 20,
         };
 
         const shape3 = {
@@ -171,9 +169,8 @@ export const drawShape = (
           stroke: stroke,
           startX: selectedShape.startX,
           startY: selectedShape.startY + selectedShape.height,
-          radius: 20
+          radius: 20,
         };
-
 
         const shape4 = {
           id: -1,
@@ -182,14 +179,13 @@ export const drawShape = (
           stroke: stroke,
           startX: selectedShape.startX + selectedShape.width,
           startY: selectedShape.startY,
-          radius: 20
+          radius: 20,
         };
 
         TL = findInterSection(event.clientX, event.clientY, shape1);
         BR = findInterSection(event.clientX, event.clientY, shape2);
         TR = findInterSection(event.clientX, event.clientY, shape3);
         BL = findInterSection(event.clientX, event.clientY, shape4);
-
 
         console.log("is inside", TL, TR, BL, BR);
 
@@ -198,9 +194,106 @@ export const drawShape = (
         } else if (TR || BL) {
           document.getElementsByTagName("body")[0].style.cursor = "nesw-resize";
         }
+      } else if (selectedShape?.type == "ellipse") {
+        const shape1 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.startX + selectedShape.radius,
+          startY: selectedShape.startY,
+          radius: 5,
+        };
 
+        const shape2 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.startX - selectedShape.radius,
+          startY: selectedShape.startY,
+          radius: 5,
+        };
+
+        const shape3 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.startX,
+          startY: selectedShape.startY + selectedShape.radius,
+          radius: 5,
+        };
+
+        const shape4 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.startX,
+          startY: selectedShape.startY - selectedShape.radius,
+          radius: 5,
+        };
+
+        ctx.strokeStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(
+          selectedShape.startX + selectedShape.radius,
+          selectedShape.startY,
+          5,
+          0,
+          2 * Math.PI,
+        );
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.strokeStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(
+          selectedShape.startX - selectedShape.radius,
+          selectedShape.startY,
+          5,
+          0,
+          2 * Math.PI,
+        );
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.strokeStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(
+          selectedShape.startX,
+          selectedShape.startY + selectedShape.radius,
+          5,
+          0,
+          2 * Math.PI,
+        );
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.strokeStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(
+          selectedShape.startX,
+          selectedShape.startY - selectedShape.radius,
+          5,
+          0,
+          2 * Math.PI,
+        );
+        ctx.stroke();
+        ctx.closePath();
+
+        ELR = findInterSection(event.clientX, event.clientY, shape1);
+        ELL = findInterSection(event.clientX, event.clientY, shape2);
+        ELT = findInterSection(event.clientX, event.clientY, shape3);
+        ELB = findInterSection(event.clientX, event.clientY, shape4);
+
+        if (ELR || ELL) {
+          document.getElementsByTagName("body")[0].style.cursor = "e-resize";
+        } else if (ELT || ELB) {
+          document.getElementsByTagName("body")[0].style.cursor = "n-resize";
+        }
       }
-
     } else {
       startX = event.clientX - rect.left;
       startY = event.clientY - rect.top;
@@ -358,7 +451,7 @@ export const drawShape = (
           return shape.id !== selectedShape?.id;
         });
 
-        if (!TL && !TR && !BL && !BR) {
+        if (!TL && !TR && !BL && !BR && !ELR && !ELL && !ELT && !ELB) {
           if (selectedShape.type == "rectangle") {
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
@@ -387,13 +480,6 @@ export const drawShape = (
             selectedShape.startX = event.clientX - rect.left - slecteOffsetX;
             selectedShape.startY = event.clientY - rect.left - slecteOffsetY;
           } else if (selectedShape.type == "line") {
-            console.log(
-              "line is selected",
-              selectedShape,
-              event.clientX,
-              event.clientY,
-            );
-
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
             ctx.beginPath();
@@ -417,6 +503,8 @@ export const drawShape = (
             selectedShape.moveX = newEndX - slecteOffsetX;
             selectedShape.moveY = newEndY - slecteOffsetY;
           } else if (selectedShape.type == "arrow") {
+            console.log("Arrow is selected");
+
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
             ctx.beginPath();
@@ -442,15 +530,23 @@ export const drawShape = (
 
             ctx.moveTo(newEndX - slecteOffsetX, newEndY - slecteOffsetY);
             ctx.lineTo(
-              newEndX - slecteOffsetX - arrowLen * Math.cos(angle - Math.PI / 6),
-              newEndY - slecteOffsetY - arrowLen * Math.sin(angle - Math.PI / 6),
+              newEndX -
+                slecteOffsetX -
+                arrowLen * Math.cos(angle - Math.PI / 6),
+              newEndY -
+                slecteOffsetY -
+                arrowLen * Math.sin(angle - Math.PI / 6),
             );
             ctx.stroke();
 
             ctx.moveTo(newEndX - slecteOffsetX, newEndY - slecteOffsetY);
             ctx.lineTo(
-              newEndX - slecteOffsetX - arrowLen * Math.cos(angle + Math.PI / 6),
-              newEndY - slecteOffsetY - arrowLen * Math.sin(angle + Math.PI / 6),
+              newEndX -
+                slecteOffsetX -
+                arrowLen * Math.cos(angle + Math.PI / 6),
+              newEndY -
+                slecteOffsetY -
+                arrowLen * Math.sin(angle + Math.PI / 6),
             );
 
             ctx.stroke();
@@ -462,62 +558,93 @@ export const drawShape = (
             selectedShape.moveY = newEndY - slecteOffsetY;
           }
         } else {
-
           if (selectedShape.type == "rectangle" && TL) {
             // console.log(selectedShape);
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
             const x2 = selectedShape.width + selectedShape.startX;
             const y2 = selectedShape.height + selectedShape.startY;
-            ctx.strokeRect(event.clientX, event.clientY, x2 - event.clientX, y2 - event.clientY);
+            ctx.strokeRect(
+              event.clientX,
+              event.clientY,
+              x2 - event.clientX,
+              y2 - event.clientY,
+            );
 
             selectedShape.startX = event.clientX;
             selectedShape.startY = event.clientY;
             selectedShape.width = x2 - event.clientX;
             selectedShape.height = y2 - event.clientY;
-
           } else if (selectedShape.type == "rectangle" && BR) {
             // console.log(selectedShape);
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
 
-            ctx.strokeRect(selectedShape.startX, selectedShape.startY, event.clientX - selectedShape.startX, event.clientY - selectedShape.startY);
+            ctx.strokeRect(
+              selectedShape.startX,
+              selectedShape.startY,
+              event.clientX - selectedShape.startX,
+              event.clientY - selectedShape.startY,
+            );
 
             selectedShape.width = event.clientX - selectedShape.startX;
             selectedShape.height = event.clientY - selectedShape.startY;
           } else if (selectedShape.type == "rectangle" && BL) {
-
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
 
             const newWidth = event.clientX - selectedShape.startX;
-            const newHeight = selectedShape.startY + selectedShape.height - event.clientY;
+            const newHeight =
+              selectedShape.startY + selectedShape.height - event.clientY;
 
             selectedShape.startY = event.clientY;
             selectedShape.width = newWidth;
             selectedShape.height = newHeight;
 
-
-            ctx.strokeRect(selectedShape.startX, selectedShape.startY, selectedShape.width, selectedShape.height);
-
+            ctx.strokeRect(
+              selectedShape.startX,
+              selectedShape.startY,
+              selectedShape.width,
+              selectedShape.height,
+            );
           } else if (selectedShape.type == "rectangle" && TR) {
-
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
-            const newWidth = selectedShape.startX + selectedShape.width - event.clientX;  
-            const newHeight = event.clientY - selectedShape.startY;  
-            
+            const newWidth =
+              selectedShape.startX + selectedShape.width - event.clientX;
+            const newHeight = event.clientY - selectedShape.startY;
+
             selectedShape.startX = event.clientX;
             selectedShape.width = newWidth;
             selectedShape.height = newHeight;
+            ctx.strokeRect(
+              selectedShape.startX,
+              selectedShape.startY,
+              selectedShape.width,
+              selectedShape.height,
+            );
+          } else if (selectedShape.type == "ellipse") {
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
 
-            ctx.strokeRect(selectedShape.startX, selectedShape.startY, selectedShape.width, selectedShape.height);
+            const radius = Math.sqrt(
+              Math.abs(event.clientX - selectedShape.startX) ** 2 +
+                Math.abs(event.clientY - selectedShape.startY) ** 2,
+            );
+            ctx.beginPath();
+            ctx.arc(
+              selectedShape.startX,
+              selectedShape.startY,
+              radius,
+              0,
+              2 * Math.PI,
+            );
+            ctx.stroke();
+            ctx.closePath();
 
-
+            selectedShape.radius = radius;
           }
-
         }
-
       }
     }
   };
