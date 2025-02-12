@@ -107,6 +107,8 @@ export const drawShape = (
   let ELB = false;
   let LNS = false;
   let LNE = false;
+  let ARRS = false;
+  let ARRE = false;
 
   // Store previous event listeners to remove them properly
   const previousListeners = (canvas as any)._eventListeners || {};
@@ -335,6 +337,48 @@ export const drawShape = (
         if(LNS || LNE){
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
         }
+      } else if (selectedShape?.type == "arrow"){
+
+        ctx.strokeStyle="blue";
+        ctx.beginPath();
+        ctx.arc(selectedShape.startX,selectedShape.startY, 5, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.strokeStyle="blue";
+        ctx.beginPath();
+        ctx.arc(selectedShape.moveX,selectedShape.moveY, 5, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+
+        const shape1 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.moveX,
+          startY: selectedShape.moveY,
+          radius: 5,
+        };
+
+        const shape2 = {
+          id: -1,
+          type: "ellipse",
+          color: color,
+          stroke: stroke,
+          startX: selectedShape.startX,
+          startY: selectedShape.startY,
+          radius: 5,
+        };
+      
+         ARRS = findInterSection(event.clientX, event.clientY, shape1);
+         ARRE = findInterSection(event.clientX, event.clientY, shape2);
+
+         console.log(ARRE, ARRS);
+
+        if(ARRS || ARRE){
+          document.getElementsByTagName("body")[0].style.cursor = "pointer";
+        }
       }
     } else {
       startX = event.clientX - rect.left;
@@ -493,7 +537,7 @@ export const drawShape = (
           return shape.id !== selectedShape?.id;
         });
 
-        if (!TL && !TR && !BL && !BR && !ELR && !ELL && !ELT && !ELB && !LNS && !LNE) {
+        if (!TL && !TR && !BL && !BR && !ELR && !ELL && !ELT && !ELB && !LNS && !LNE && !ARRS && !ARRE) {
           if (selectedShape.type == "rectangle") {
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
@@ -600,6 +644,7 @@ export const drawShape = (
             selectedShape.moveY = newEndY - slecteOffsetY;
           }
         } else {
+         
           if (selectedShape.type == "rectangle" && TL) {
             // console.log(selectedShape);
             ctx.strokeStyle = selectedShape.color;
@@ -709,12 +754,77 @@ export const drawShape = (
             ctx.stroke();
             ctx.closePath();
 
-            // selectedShape.startX = selectedShape.moveX ;
-            // selectedShape.startY = selectedShape.moveY;
             selectedShape.startX = event.clientX - rect.left;
             selectedShape.startY = event.clientY - rect.top;
 
-         }
+          } else if(selectedShape.type == "arrow" && ARRS) {
+
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
+
+            ctx.beginPath();
+            ctx.moveTo(selectedShape.startX, selectedShape.startY);
+            ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
+            ctx.stroke();
+            ctx.closePath();
+
+            const arrowLen = 10;
+            let dx = event.clientX - rect.left - selectedShape.startX;
+            let dy = event.clientY - rect.top - selectedShape.startY;
+            let angle = Math.atan2(dy, dx);
+    
+            ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+            ctx.lineTo(
+              event.clientX - rect.left - arrowLen * Math.cos(angle - Math.PI / 6),
+              event.clientY - rect.top - arrowLen * Math.sin(angle - Math.PI / 6),
+            );
+            ctx.stroke();
+    
+            ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+            ctx.lineTo(
+              event.clientX - rect.left - arrowLen * Math.cos(angle + Math.PI / 6),
+              event.clientY - rect.top - arrowLen * Math.sin(angle + Math.PI / 6),
+            );
+            ctx.stroke();
+
+            selectedShape.moveX = event.clientX - rect.left;
+            selectedShape.moveY = event.clientY - rect.top;
+
+          } else if(selectedShape.type == "arrow" && ARRE) {
+        
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
+
+            ctx.beginPath();
+            ctx.moveTo(selectedShape.moveX, selectedShape.moveY);
+            ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
+            ctx.stroke();
+            ctx.closePath();
+
+
+            const arrowLen = 10;
+            let dx = selectedShape.moveX - selectedShape.startX;
+            let dy = selectedShape.moveY - selectedShape.startY;
+            let angle = Math.atan2(dy, dx);
+    
+            ctx.moveTo(selectedShape.moveX, selectedShape.moveY);
+            ctx.lineTo(
+              selectedShape.moveX - arrowLen * Math.cos(angle - Math.PI / 6),
+              selectedShape.moveY - arrowLen * Math.sin(angle - Math.PI / 6),
+            );
+            ctx.stroke();
+    
+            ctx.moveTo(selectedShape.moveX, selectedShape.moveY);
+            ctx.lineTo(
+              selectedShape.moveX - arrowLen * Math.cos(angle + Math.PI / 6),
+              selectedShape.moveY - rect.top - arrowLen * Math.sin(angle + Math.PI / 6),
+            );
+            ctx.stroke();
+
+            selectedShape.startX = event.clientX - rect.left;
+            selectedShape.startY = event.clientY - rect.top;
+          }
+
         }
       }
     }
