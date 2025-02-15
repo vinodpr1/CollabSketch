@@ -82,11 +82,6 @@ export const drawShape = (
         const zoneX1 = selectedShape.startX;
         const zoneY1 = selectedShape.startY;
 
-        // ctx.strokeStyle="green";
-        // ctx.strokeRect(selectedShape.startX-10, selectedShape.startY-10, 5, 5);
-        // ctx.strokeRect(selectedShape.width+selectedShape.startX, selectedShape.height+selectedShape.startY, 5, 5);
-        // ctx.strokeRect(selectedShape.startX-10, selectedShape.startY-10, selectedShape.width+20, selectedShape.height+20);
-
         const topLeftCorner = checkCorner(
           -1,
           "ellipse",
@@ -549,7 +544,6 @@ export const drawShape = (
             ctx.lineWidth = selectedShape.stroke;
             const x2 = selectedShape.width + selectedShape.startX;
             const y2 = selectedShape.height + selectedShape.startY;
-
             DrawRectangle(
               ctx,
               event.clientX,
