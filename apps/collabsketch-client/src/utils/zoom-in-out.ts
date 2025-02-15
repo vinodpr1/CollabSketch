@@ -11,24 +11,23 @@ const zoomFactor = 1.04; // Zoom factor (10% zoom per step)
 const zoomSpeed = 0.1;
 
 export const zoom = (
-    direction: string,
-    offsetX: number,
-    offsetY: number,
-    ctx: CanvasRenderingContext2D,
-    canvas: HTMLCanvasElement,
-    existingShape: any
-  ) => {
-    if (direction === "in") {
-      scale *= zoomFactor;
-    } else if (direction === "out") {
-      scale /= zoomFactor;
-    }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save();
-    ctx.translate(offsetX, offsetY);
-    ctx.scale(scale, scale);
-    ctx.translate(-offsetX, -offsetY);
-    drawShapesBeforeClear(ctx, canvas, existingShape);
-    ctx.restore();
-  };
-  
+  direction: string,
+  offsetX: number,
+  offsetY: number,
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  existingShape: any,
+) => {
+  if (direction === "in") {
+    scale *= zoomFactor;
+  } else if (direction === "out") {
+    scale /= zoomFactor;
+  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(scale, scale);
+  ctx.translate(-offsetX, -offsetY);
+  drawShapesBeforeClear(ctx, canvas, existingShape);
+  ctx.restore();
+};

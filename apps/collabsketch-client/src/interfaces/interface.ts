@@ -55,11 +55,7 @@ export type ExistingShape =
       text: string;
     };
 
-    
-
 export interface Pencil {
-    x: number;
-    y: number;
-  }
-  
-  
+  x: number;
+  y: number;
+}
