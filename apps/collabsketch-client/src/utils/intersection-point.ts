@@ -1,22 +1,26 @@
-export const findInterSection = (x: any, y: any, existingShape: any) => {
+import { DrawEllipse, DrawLine } from "./shape";
+
+export const findInterSection = (x: any, y: any, existingShape: any, ctx?:any) => {
   if (existingShape.type == "pencil") {
-    //  console.log("Pencil", x, y , existingShape);
 
-    let truth = false;
-    for (let i = 0; i < existingShape.path.length; i++) {
-      const points = existingShape.path[i];
-      console.log("Points", points);
-      if (
-        points.x <= x - 10 &&
-        points.x + 10 >= x &&
-        points.y <= y - 10 &&
-        points.y + 10 >= y
-      ) {
-        truth = true;
-      }
-    }
+          let minX= 100000;
+          let minY = 10000;
+          let maxX = -1;
+          let maxY = -1;
+    
+          for(let i=0;i<existingShape.path.length;i++){
+            minX=Math.min(minX, existingShape.path[i].x);
+            minY=Math.min(minY, existingShape.path[i].y);
+            maxX=Math.max(maxX, existingShape.path[i].x);
+            maxY=Math.max(maxY, existingShape.path[i].y);
+          }
+          const truth =
+          x >= Math.min(minX, maxX) &&
+          x <= Math.max(minX, maxX) &&
+          y >= Math.min(minY, maxY) &&
+          y <= Math.max(minY, maxY);
+          return truth;
 
-    return truth;
   }
 
   if (existingShape.type == "ellipse") {

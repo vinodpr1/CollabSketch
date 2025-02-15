@@ -66,12 +66,42 @@ export const drawShape = (
         if (shape.type != "pencil") {
           selectedOffset = event.clientX - shape?.startX;
           selecteOffsetY = event.clientY - shape?.startY;
+          return findInterSection(
+            event.clientX - rect.left,
+            event.clientY - rect.top,
+            shape,
+          )
+        }else{
+          
+          console.log("Ab pencil ki bari hai", shape);
+          let minX= 100000;
+          let minY = 10000;
+          let maxX = -1;
+          let maxY = -1;
+    
+          for(let i=0;i<shape.path.length;i++){
+            minX=Math.min(minX, shape.path[i].x);
+            minY=Math.min(minY, shape.path[i].y);
+            maxX=Math.max(maxX, shape.path[i].x);
+            maxY=Math.max(maxY, shape.path[i].y);
+          }
+
+          // console.log( minX, minY, maxX, maxY);
+    
+          // DrawLine(ctx, minX, minY, minX, maxY);
+          // DrawLine(ctx, minX, maxY, maxX, maxY);
+          // DrawLine(ctx, maxX, maxY, maxX, minY);
+          // DrawLine(ctx, maxX, minY, minX, minY);
+
+          return findInterSection(
+            event.clientX - rect.left,
+            event.clientY - rect.top,
+            shape,
+            ctx
+          )
+
         }
-        return findInterSection(
-          event.clientX - rect.left,
-          event.clientY - rect.top,
-          shape,
-        );
+       
       });
 
       if (selectedShape) {
@@ -314,6 +344,7 @@ export const drawShape = (
         stroke: 1,
         path: pencilPath,
       };
+
       pencilPath = [];
     } else if (tool === "arrow") {
       shape = {
@@ -483,8 +514,7 @@ export const drawShape = (
             selectedShape.moveX = newEndX - selectedOffset;
             selectedShape.moveY = newEndY - selecteOffsetY;
           } else if (selectedShape.type == "arrow") {
-            console.log("Arrow is selected");
-
+    
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
             ctx.beginPath();
