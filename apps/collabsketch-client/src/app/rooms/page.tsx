@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Users, ArrowRightCircle, Search, Plus, X } from "lucide-react";
+import { Users, ArrowRightCircle, Search, Plus, X, Loader } from "lucide-react";
 import { HTTP_BACKEND_URL } from "@repo/common/HTTP_BACKEND_URL";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getAuthToken, removeAuthToken } from "@/auth/auth";
 import {LogOut} from "lucide-react"
+import { Spin } from "antd";
 
 interface Room {
   id: number;
@@ -59,8 +60,6 @@ function page() {
     window.location.href = '/signin'; // Redirect to login page
   };
 
-  if (!rooms.length) return <h1>Loading .....</h1>;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-3 sm:p-6">
       <div className="max-w-4xl mx-auto">
@@ -104,6 +103,10 @@ function page() {
         </div>
 
         {/* Room Grid */}
+        { 
+        !rooms.length ? 
+         <div className="flex justify-center items-center"> <Spin />  </div>
+        : 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {rooms.map((room, index) => (
             <div
@@ -142,6 +145,8 @@ function page() {
             </div>
           ))}
         </div>
+       }
+
       </div>
 
       {/* Create Room Modal */}

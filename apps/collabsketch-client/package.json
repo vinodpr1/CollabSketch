@@ -12,6 +12,7 @@
     "@repo/common": "workspace:*",
     "@repo/ui": "workspace:*",
     "@types/axios": "^0.14.4",
+    "antd": "^5.24.0",
     "axios": "^1.7.9",
     "lucide-react": "^0.473.0",
     "next": "15.1.6",
