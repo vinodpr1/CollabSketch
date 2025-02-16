@@ -1,13 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Moon, Sun, Mail, Lock, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { HTTP_BACKEND_URL } from "@repo/common/HTTP_BACKEND_URL";
+import { getAuthToken, setAuthToken } from "@/auth/auth";
 
 function Auth({ comp }: { comp: string }) {
+  
   const router = useRouter();
+  
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -20,11 +23,20 @@ function Auth({ comp }: { comp: string }) {
       userData,
     );
     if (response.data) {
-      console.log(response);
-      localStorage.setItem("token", response.data.token);
+      setAuthToken(response.data.token);
       router.push("/rooms");
     }
   };
+
+ 
+  useEffect(() => {
+    const token = getAuthToken(); // Check for token in localStorage
+
+    if (token) {
+      router.push('/rooms'); // Redirect to main page if authenticated
+    }
+  }, [router]);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center p-4">

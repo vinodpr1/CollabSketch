@@ -4,6 +4,9 @@ import { Users, ArrowRightCircle, Search, Plus, X } from "lucide-react";
 import { HTTP_BACKEND_URL } from "@repo/common/HTTP_BACKEND_URL";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getAuthToken, removeAuthToken } from "@/auth/auth";
+import {LogOut} from "lucide-react"
 
 interface Room {
   id: number;
@@ -40,6 +43,22 @@ function page() {
     console.log(response.data.response);
   };
 
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = getAuthToken(); // Check for token in localStorage
+
+    if (!token) {
+      router.push('/signin'); // Redirect to login if not authenticated
+    }
+  }, [router]);
+
+
+  const handleLogout = () => {
+    removeAuthToken(); // Remove token from localStorage
+    window.location.href = '/signin'; // Redirect to login page
+  };
+
   if (!rooms.length) return <h1>Loading .....</h1>;
 
   return (
@@ -70,6 +89,12 @@ function page() {
               <Plus className="w-5 h-5" />
               <span>Create Room</span>
             </button>
+
+            <button onClick={handleLogout} className="p-1 bg-gray-300 rounded text-gray-800">
+              <LogOut />
+            </button>
+            
+
           </div>
         </div>
 
