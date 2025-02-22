@@ -8,7 +8,11 @@ const CanvasRoom = (roomid: any) => {
 
   // if (!socket) return <div className="flex justify-center items-center pt-12"><Spin/></div>
 
-  return !socket ? <div className="flex justify-center items-center pt-12">Loading....</div> : <Canvas socket={socket} roomid={roomid.roomid} />;
+  return !socket ? (
+    <div className="flex justify-center items-center pt-12">Loading....</div>
+  ) : (
+    <Canvas socket={socket} roomid={roomid.roomid} />
+  );
 };
 
 export default CanvasRoom;

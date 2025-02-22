@@ -1,26 +1,29 @@
 import { DrawEllipse, DrawLine } from "./shape";
 
-export const findInterSection = (x: any, y: any, existingShape: any, ctx?:any) => {
+export const findInterSection = (
+  x: any,
+  y: any,
+  existingShape: any,
+  ctx?: any,
+) => {
   if (existingShape.type == "pencil") {
+    let minX = 100000;
+    let minY = 10000;
+    let maxX = -1;
+    let maxY = -1;
 
-          let minX= 100000;
-          let minY = 10000;
-          let maxX = -1;
-          let maxY = -1;
-    
-          for(let i=0;i<existingShape.path.length;i++){
-            minX=Math.min(minX, existingShape.path[i].x);
-            minY=Math.min(minY, existingShape.path[i].y);
-            maxX=Math.max(maxX, existingShape.path[i].x);
-            maxY=Math.max(maxY, existingShape.path[i].y);
-          }
-          const truth =
-          x >= Math.min(minX, maxX) &&
-          x <= Math.max(minX, maxX) &&
-          y >= Math.min(minY, maxY) &&
-          y <= Math.max(minY, maxY);
-          return truth;
-
+    for (let i = 0; i < existingShape.path.length; i++) {
+      minX = Math.min(minX, existingShape.path[i].x);
+      minY = Math.min(minY, existingShape.path[i].y);
+      maxX = Math.max(maxX, existingShape.path[i].x);
+      maxY = Math.max(maxY, existingShape.path[i].y);
+    }
+    const truth =
+      x >= Math.min(minX, maxX) &&
+      x <= Math.max(minX, maxX) &&
+      y >= Math.min(minY, maxY) &&
+      y <= Math.max(minY, maxY);
+    return truth;
   }
 
   if (existingShape.type == "ellipse") {

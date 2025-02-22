@@ -8,9 +8,8 @@ import { HTTP_BACKEND_URL } from "@repo/common/HTTP_BACKEND_URL";
 import { getAuthToken, setAuthToken } from "@/auth/auth";
 
 function Auth({ comp }: { comp: string }) {
-  
   const router = useRouter();
-  
+
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -28,15 +27,13 @@ function Auth({ comp }: { comp: string }) {
     }
   };
 
- 
   useEffect(() => {
     const token = getAuthToken(); // Check for token in localStorage
 
     if (token) {
-      router.push('/rooms'); // Redirect to main page if authenticated
+      router.push("/rooms"); // Redirect to main page if authenticated
     }
   }, [router]);
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center p-4">

@@ -67,9 +67,6 @@ const Toolbar = ({ setTool, tool }: ToolProps) => {
 
 export default Toolbar;
 
-
-
-
 export function Modal() {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
@@ -90,7 +87,9 @@ export function Modal() {
         onClick={() => setIsOpen(!isOpen)}
         className={`p-2  rounded transition-all duration-500 cursor-pointer bg-gray-100`}
       >
-        <Brain className={`w-4 h-4 transition-all duration-500 text-gray-700`} />
+        <Brain
+          className={`w-4 h-4 transition-all duration-500 text-gray-700`}
+        />
       </button>
 
       {isOpen && (
@@ -102,7 +101,6 @@ export function Modal() {
             className=" rounded-lg w-11/12 p-2 max-w-md bg-gray-200"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
-
             {/* Modal content */}
             <ul className="space-y-1">
               <TextToDiagramDialog />
@@ -112,14 +110,11 @@ export function Modal() {
           {/* <dialog ref={modalRef} className="outline-none rounded">
              
           </dialog> */}
-
         </div>
       )}
     </>
   );
 }
-
-
 
 export function TextToDiagramDialog() {
   const [isOpen, setIsOpen] = useState(false);
@@ -129,7 +124,10 @@ export function TextToDiagramDialog() {
 
   return (
     <>
-      <button onClick={openDialog} className="flex items-center gap-2 text-gray-600 cursor-pointer">
+      <button
+        onClick={openDialog}
+        className="flex items-center gap-2 text-gray-600 cursor-pointer"
+      >
         <BrainCog className="h-4 w-4" />
         Text to shape
       </button>
@@ -153,8 +151,9 @@ export function TextToDiagramDialog() {
             </button>
 
             {/* Dialog content */}
-            <h2 className="text-xl text-gray-600 font-bold mb-4">Text to diagram</h2>
-            
+            <h2 className="text-xl text-gray-600 font-bold mb-4">
+              Text to diagram
+            </h2>
 
             {/* Prompt section */}
             <div className="mb-6">
@@ -180,6 +179,3 @@ export function TextToDiagramDialog() {
     </>
   );
 }
-
-
-

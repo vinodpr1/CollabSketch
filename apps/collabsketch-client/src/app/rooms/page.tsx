@@ -6,7 +6,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getAuthToken, removeAuthToken } from "@/auth/auth";
-import {LogOut} from "lucide-react"
+import { LogOut } from "lucide-react";
 import { Spin } from "antd";
 
 interface Room {
@@ -44,7 +44,7 @@ function page() {
       setRooms(response.data.response);
       console.log(response.data.response);
     } catch (error) {
-       console.log("Error has been occured");
+      console.log("Error has been occured");
     }
   };
 
@@ -54,14 +54,13 @@ function page() {
     const token = getAuthToken(); // Check for token in localStorage
 
     if (!token) {
-      router.push('/signin'); // Redirect to login if not authenticated
+      router.push("/signin"); // Redirect to login if not authenticated
     }
   }, [router]);
 
-
   const handleLogout = () => {
     removeAuthToken(); // Remove token from localStorage
-    window.location.href = '/signin'; // Redirect to login page
+    window.location.href = "/signin"; // Redirect to login page
   };
 
   return (
@@ -93,11 +92,12 @@ function page() {
               <span>Create Room</span>
             </button>
 
-            <button onClick={handleLogout} className="p-1 bg-gray-300 rounded text-gray-800">
+            <button
+              onClick={handleLogout}
+              className="p-1 bg-gray-300 rounded text-gray-800"
+            >
               <LogOut />
             </button>
-            
-
           </div>
         </div>
 
@@ -107,50 +107,51 @@ function page() {
         </div>
 
         {/* Room Grid */}
-        { 
-        !rooms.length ? 
-         <div className="flex justify-center items-center"> <Spin />  </div>
-        : 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {rooms.map((room, index) => (
-            <div
-              key={index}
-              className="group bg-gray-200  shadow-lg backdrop-blur-sm rounded-xl hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col transform hover:-translate-y-1"
-            >
+        {!rooms.length ? (
+          <div className="flex justify-center items-center">
+            {" "}
+            <Spin />{" "}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {rooms.map((room, index) => (
               <div
-                className="h-24 sm:h-28 bg-cover bg-center relative"
-                style={{
-                  backgroundImage: `url(https://plus.unsplash.com/premium_photo-1701590725824-3d0482721544?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8d2Vic2l0ZSUyMGJhbm5lcnxlbnwwfHwwfHx8MA%3D%3D)`,
-                }}
+                key={index}
+                className="group bg-gray-200  shadow-lg backdrop-blur-sm rounded-xl hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col transform hover:-translate-y-1"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 group-hover:from-black/70 transition-all" />
-                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white group-hover:text-indigo-200 transition-colors line-clamp-1">
-                    {room.slug}
-                  </h2>
-                </div>
-              </div>
-
-              <div className="p-3 sm:p-4 flex-grow">
-                <div className="flex justify-between items-center mb-3 sm:mb-4">
-                  <span className="flex items-center gap-1.5 sm:gap-2 text-gray-600 text-sm sm:text-base">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="font-medium">participants</span>
-                  </span>
+                <div
+                  className="h-24 sm:h-28 bg-cover bg-center relative"
+                  style={{
+                    backgroundImage: `url(https://plus.unsplash.com/premium_photo-1701590725824-3d0482721544?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8d2Vic2l0ZSUyMGJhbm5lcnxlbnwwfHwwfHx8MA%3D%3D)`,
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 group-hover:from-black/70 transition-all" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                    <h2 className="text-lg sm:text-xl font-bold text-white group-hover:text-indigo-200 transition-colors line-clamp-1">
+                      {room.slug}
+                    </h2>
+                  </div>
                 </div>
 
-                <Link href={`/draw/${room.slug}`}>
-                  <button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1 sm:py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm sm:text-base">
-                    Join Room
-                    <ArrowRightCircle className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
-                  </button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-       }
+                <div className="p-3 sm:p-4 flex-grow">
+                  <div className="flex justify-between items-center mb-3 sm:mb-4">
+                    <span className="flex items-center gap-1.5 sm:gap-2 text-gray-600 text-sm sm:text-base">
+                      <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="font-medium">participants</span>
+                    </span>
+                  </div>
 
+                  <Link href={`/draw/${room.slug}`}>
+                    <button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1 sm:py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm sm:text-base">
+                      Join Room
+                      <ArrowRightCircle className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Create Room Modal */}

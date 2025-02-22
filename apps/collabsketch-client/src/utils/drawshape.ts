@@ -63,7 +63,6 @@ export const drawShape = (
     clicked = true;
     const rect = canvas.getBoundingClientRect();
     if (tool == "select") {
-
       selectedShape = existingShape.find((shape) => {
         if (shape.type != "pencil") {
           selectedOffsetX = event.clientX - shape?.startX;
@@ -72,10 +71,8 @@ export const drawShape = (
             event.clientX - rect.left,
             event.clientY - rect.top,
             shape,
-          )
-        }
-        else {
-
+          );
+        } else {
           selectedOffsetX = event.clientX - shape?.path[0].x;
           selecteOffsetY = event.clientY - shape?.path[0].y;
 
@@ -83,8 +80,8 @@ export const drawShape = (
             event.clientX - rect.left,
             event.clientY - rect.top,
             shape,
-            ctx
-          )
+            ctx,
+          );
         }
       });
 
@@ -144,7 +141,6 @@ export const drawShape = (
         if (TL || BR || TR || BL)
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
       } else if (selectedShape?.type == "ellipse") {
-
         const right = checkCorner(
           -1,
           "ellipse",
@@ -219,7 +215,6 @@ export const drawShape = (
         if (ELR || ELL || ELT || ELB)
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
       } else if (selectedShape?.type == "line") {
-
         DrawEllipse(ctx, selectedShape.startX, selectedShape.startY, 7, 8);
         DrawEllipse(ctx, selectedShape.moveX, selectedShape.moveY, 7, 8);
 
@@ -249,7 +244,6 @@ export const drawShape = (
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
         }
       } else if (selectedShape?.type == "arrow") {
-
         DrawEllipse(ctx, selectedShape.startX, selectedShape.startY, 7, 8);
         DrawEllipse(ctx, selectedShape.moveX, selectedShape.moveY, 7, 8);
 
@@ -364,7 +358,6 @@ export const drawShape = (
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-
     if (clicked) {
       const rect = canvas.getBoundingClientRect();
       const width = event.clientX - startX - rect.left;
@@ -415,9 +408,6 @@ export const drawShape = (
           event.clientY - rect.top - arrowLen * Math.sin(angle + Math.PI / 6),
         );
       } else if (tool === "pencil") {
-
-
-
         const currentX = event.clientX - rect.left;
         const currentY = event.clientY - rect.top;
         pencilPath.push({ x: currentX, y: currentY });
@@ -427,8 +417,6 @@ export const drawShape = (
           ctx.lineTo(pencilPath[i].x, pencilPath[i].y);
         }
         ctx.stroke();
-
-
       } else if (tool == "eraser") {
         existingShape = existingShape.filter((shape) => {
           return !findInterSection(
@@ -438,7 +426,6 @@ export const drawShape = (
           );
         });
       } else if (tool == "select") {
-
         if (!selectedShape) return;
 
         existingShape = existingShape.filter((shape) => {
@@ -460,7 +447,6 @@ export const drawShape = (
           !ARRE
         ) {
           if (selectedShape.type == "rectangle") {
-
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
             ctx.strokeRect(
@@ -511,7 +497,6 @@ export const drawShape = (
             selectedShape.moveX = newEndX - selectedOffsetX;
             selectedShape.moveY = newEndY - selecteOffsetY;
           } else if (selectedShape.type == "arrow") {
-
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
             ctx.beginPath();
@@ -538,22 +523,22 @@ export const drawShape = (
             ctx.moveTo(newEndX - selectedOffsetX, newEndY - selecteOffsetY);
             ctx.lineTo(
               newEndX -
-              selectedOffsetX -
-              arrowLen * Math.cos(angle - Math.PI / 6),
+                selectedOffsetX -
+                arrowLen * Math.cos(angle - Math.PI / 6),
               newEndY -
-              selecteOffsetY -
-              arrowLen * Math.sin(angle - Math.PI / 6),
+                selecteOffsetY -
+                arrowLen * Math.sin(angle - Math.PI / 6),
             );
             ctx.stroke();
 
             ctx.moveTo(newEndX - selectedOffsetX, newEndY - selecteOffsetY);
             ctx.lineTo(
               newEndX -
-              selectedOffsetX -
-              arrowLen * Math.cos(angle + Math.PI / 6),
+                selectedOffsetX -
+                arrowLen * Math.cos(angle + Math.PI / 6),
               newEndY -
-              selecteOffsetY -
-              arrowLen * Math.sin(angle + Math.PI / 6),
+                selecteOffsetY -
+                arrowLen * Math.sin(angle + Math.PI / 6),
             );
 
             ctx.stroke();
@@ -564,11 +549,10 @@ export const drawShape = (
             selectedShape.moveX = newEndX - selectedOffsetX;
             selectedShape.moveY = newEndY - selecteOffsetY;
           } else if (selectedShape.type == "pencil") {
-
-
-            const offsetX = event.clientX - selectedShape.path[0].x - selectedOffsetX;
-            const offsetY = event.clientY - selectedShape.path[0].y - selecteOffsetY;
-
+            const offsetX =
+              event.clientX - selectedShape.path[0].x - selectedOffsetX;
+            const offsetY =
+              event.clientY - selectedShape.path[0].y - selecteOffsetY;
 
             ctx.strokeStyle = color;
             ctx.lineWidth = stroke;
@@ -592,9 +576,7 @@ export const drawShape = (
 
             ctx.stroke();
             console.log("Pencil shape moved", selectedShape);
-
           }
-
         } else {
           if (selectedShape.type == "rectangle" && TL) {
             // console.log(selectedShape);
@@ -634,7 +616,6 @@ export const drawShape = (
             selectedShape.width = event.clientX - selectedShape.startX;
             selectedShape.height = event.clientY - selectedShape.startY;
           } else if (selectedShape.type == "rectangle" && BL) {
-
             const newWidth = event.clientX - selectedShape.startX;
             const newHeight =
               selectedShape.startY + selectedShape.height - event.clientY;
@@ -654,7 +635,6 @@ export const drawShape = (
               selectedShape.height,
             );
           } else if (selectedShape.type == "rectangle" && TR) {
-
             const newWidth =
               selectedShape.startX + selectedShape.width - event.clientX;
             const newHeight = event.clientY - selectedShape.startY;
@@ -685,7 +665,7 @@ export const drawShape = (
             );
             const radius = Math.sqrt(
               Math.abs(event.clientX - selectedShape.startX) ** 2 +
-              Math.abs(event.clientY - selectedShape.startY) ** 2,
+                Math.abs(event.clientY - selectedShape.startY) ** 2,
             );
 
             selectedShape.radius = radius;
@@ -739,22 +719,22 @@ export const drawShape = (
               event.clientX - rect.left,
               event.clientY - rect.top,
               event.clientX -
-              rect.left -
-              arrowLen * Math.cos(angle - Math.PI / 6),
+                rect.left -
+                arrowLen * Math.cos(angle - Math.PI / 6),
               event.clientY -
-              rect.top -
-              arrowLen * Math.sin(angle - Math.PI / 6),
+                rect.top -
+                arrowLen * Math.sin(angle - Math.PI / 6),
             );
             DrawLine(
               ctx,
               event.clientX - rect.left,
               event.clientY - rect.top,
               event.clientX -
-              rect.left -
-              arrowLen * Math.cos(angle + Math.PI / 6),
+                rect.left -
+                arrowLen * Math.cos(angle + Math.PI / 6),
               event.clientY -
-              rect.top -
-              arrowLen * Math.sin(angle + Math.PI / 6),
+                rect.top -
+                arrowLen * Math.sin(angle + Math.PI / 6),
             );
 
             selectedShape.moveX = event.clientX - rect.left;
@@ -789,8 +769,8 @@ export const drawShape = (
               selectedShape.moveY,
               selectedShape.moveX - arrowLen * Math.cos(angle + Math.PI / 6),
               selectedShape.moveY -
-              rect.top -
-              arrowLen * Math.sin(angle + Math.PI / 6),
+                rect.top -
+                arrowLen * Math.sin(angle + Math.PI / 6),
             );
 
             selectedShape.startX = event.clientX - rect.left;
@@ -798,9 +778,7 @@ export const drawShape = (
           }
         }
       }
-
     }
-
   };
 
   const handleZoom = (event: WheelEvent) => {
@@ -837,5 +815,4 @@ export const drawShape = (
     mousemove: handleMouseMove,
     wheel: handleZoom,
   };
-
 };
