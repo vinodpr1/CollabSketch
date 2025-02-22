@@ -39,9 +39,13 @@ function page() {
   }, []);
 
   const getAllRooms = async () => {
-    const response = await axios.get(`${HTTP_BACKEND_URL}/room/rooms`);
-    setRooms(response.data.response);
-    console.log(response.data.response);
+    try {
+      const response = await axios.get(`${HTTP_BACKEND_URL}/room/rooms`);
+      setRooms(response.data.response);
+      console.log(response.data.response);
+    } catch (error) {
+       console.log("Error has been occured");
+    }
   };
 
   const router = useRouter();

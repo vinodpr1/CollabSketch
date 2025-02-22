@@ -6,6 +6,7 @@ import { DrawEllipse, DrawLine, DrawRectangle } from "./shape";
 
 let existingShape: ExistingShape[] = [];
 let pencilPath: Pencil[] = [];
+let replacePencilPath: Pencil[] = [];
 
 let scale = 1; // Initial scale
 let minScale = 0.5;
@@ -62,6 +63,7 @@ export const drawShape = (
     clicked = true;
     const rect = canvas.getBoundingClientRect();
     if (tool == "select") {
+      
       selectedShape = existingShape.find((shape) => {
         if (shape.type != "pencil") {
           selectedOffsetX = event.clientX - shape?.startX;
@@ -71,7 +73,12 @@ export const drawShape = (
             event.clientY - rect.top,
             shape,
           )
-        } else {
+        } 
+        else {
+
+          selectedOffsetX = event.clientX - shape?.path[0].x;
+          selecteOffsetY = event.clientY - shape?.path[0].y;
+
           return findInterSection(
             event.clientX - rect.left,
             event.clientY - rect.top,
@@ -83,9 +90,11 @@ export const drawShape = (
 
       if (selectedShape) {
         document.getElementsByTagName("body")[0].style.cursor = "move";
+        console.log("Inside just selected function", selectedShape);
       }
 
       if (selectedShape?.type == "rectangle") {
+        console.log("Inside just selected function extra if", selectedShape);
         const zoneX1 = selectedShape.startX;
         const zoneY1 = selectedShape.startY;
 
@@ -135,6 +144,7 @@ export const drawShape = (
         if (TL || BR || TR || BL)
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
       } else if (selectedShape?.type == "ellipse") {
+
         const right = checkCorner(
           -1,
           "ellipse",
@@ -176,29 +186,29 @@ export const drawShape = (
           ctx,
           selectedShape.startX + selectedShape.radius,
           selectedShape.startY,
-          7,
-          8,
+          5,
+          6,
         );
         DrawEllipse(
           ctx,
           selectedShape.startX - selectedShape.radius,
           selectedShape.startY,
-          7,
-          8,
+          5,
+          6,
         );
         DrawEllipse(
           ctx,
           selectedShape.startX,
           selectedShape.startY + selectedShape.radius,
-          7,
-          8,
+          5,
+          6,
         );
         DrawEllipse(
           ctx,
           selectedShape.startX,
           selectedShape.startY - selectedShape.radius,
-          7,
-          8,
+          5,
+          6,
         );
 
         ELR = findInterSection(event.clientX, event.clientY, right);
@@ -209,6 +219,7 @@ export const drawShape = (
         if (ELR || ELL || ELT || ELB)
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
       } else if (selectedShape?.type == "line") {
+
         DrawEllipse(ctx, selectedShape.startX, selectedShape.startY, 7, 8);
         DrawEllipse(ctx, selectedShape.moveX, selectedShape.moveY, 7, 8);
 
@@ -238,6 +249,7 @@ export const drawShape = (
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
         }
       } else if (selectedShape?.type == "arrow") {
+
         DrawEllipse(ctx, selectedShape.startX, selectedShape.startY, 7, 8);
         DrawEllipse(ctx, selectedShape.moveX, selectedShape.moveY, 7, 8);
 
@@ -352,6 +364,7 @@ export const drawShape = (
   };
 
   const handleMouseMove = (event: MouseEvent) => {
+
     if (clicked) {
       const rect = canvas.getBoundingClientRect();
       const width = event.clientX - startX - rect.left;
@@ -402,6 +415,9 @@ export const drawShape = (
           event.clientY - rect.top - arrowLen * Math.sin(angle + Math.PI / 6),
         );
       } else if (tool === "pencil") {
+
+
+
         const currentX = event.clientX - rect.left;
         const currentY = event.clientY - rect.top;
         pencilPath.push({ x: currentX, y: currentY });
@@ -411,6 +427,8 @@ export const drawShape = (
           ctx.lineTo(pencilPath[i].x, pencilPath[i].y);
         }
         ctx.stroke();
+
+
       } else if (tool == "eraser") {
         existingShape = existingShape.filter((shape) => {
           return !findInterSection(
@@ -420,27 +438,29 @@ export const drawShape = (
           );
         });
       } else if (tool == "select") {
-        if (!selectedShape) return;
 
-        existingShape = existingShape.filter((shape) => {
-          return shape.id !== selectedShape?.id;
-        });
+      if (!selectedShape) return;
 
-        if (
-          !TL &&
-          !TR &&
-          !BL &&
-          !BR &&
-          !ELR &&
-          !ELL &&
-          !ELT &&
-          !ELB &&
-          !LNS &&
-          !LNE &&
-          !ARRS &&
-          !ARRE
-        ) {
+      existingShape = existingShape.filter((shape) => {
+        return shape.id !== selectedShape?.id;
+      });
+
+      if (
+        !TL &&
+        !TR &&
+        !BL &&
+        !BR &&
+        !ELR &&
+        !ELL &&
+        !ELT &&
+        !ELB &&
+        !LNS &&
+        !LNE &&
+        !ARRS &&
+        !ARRE
+       ) {
           if (selectedShape.type == "rectangle") {
+
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
             ctx.strokeRect(
@@ -545,30 +565,55 @@ export const drawShape = (
             selectedShape.moveY = newEndY - selecteOffsetY;
           } else if (selectedShape.type == "pencil") {
 
-            const offsetX = event.clientX - selectedShape.path[0].x;
-            const offsetY = event.clientY - selectedShape.path[0].y;
+            // let minX= Infinity;
+            // let minY = Infinity;
+            // let maxX = -Infinity;
+            // let maxY = -Infinity;
+      
+            // for(let i=0;i<selectedShape.path.length;i++){
+            //   minX=Math.min(minX, selectedShape.path[i].x);
+            //   minY=Math.min(minY, selectedShape.path[i].y);
+            //   maxX=Math.max(maxX, selectedShape.path[i].x);
+            //   maxY=Math.max(maxY, selectedShape.path[i].y);
+            // }
 
+            // ctx.strokeStyle="blue";
+            // ctx.lineWidth=0.3;
+            
+            // DrawRectangle(ctx, minX, minY, maxX-minX, maxY-minY);
+
+            // Logic to redraw a pencil
+            const offsetX = event.clientX - selectedShape.path[0].x - selectedOffsetX;
+            const offsetY = event.clientY - selectedShape.path[0].y - selecteOffsetY;
+
+            ctx.strokeStyle=color;
+            ctx.lineWidth=stroke;
             ctx.beginPath();
 
             for (let i = 1; i < selectedShape.path.length; i++) {
-              const prevPoint = selectedShape.path[i - 1];
-              const currPoint = selectedShape.path[i];
+              const prevPoint = selectedShape.path[i - 1]  ;
+              const currPoint = selectedShape.path[i] ;
 
-              ctx.moveTo(prevPoint.x + offsetX, prevPoint.y + offsetY);
+              ctx.moveTo(prevPoint.x + offsetX, prevPoint.y + offsetY );
               ctx.lineTo(currPoint.x + offsetX, currPoint.y + offsetY);
+              
             }
 
             ctx.stroke();
             console.log("Pencil shape moved", selectedShape);
 
           }
+
         } else {
           if (selectedShape.type == "rectangle" && TL) {
             // console.log(selectedShape);
-            ctx.strokeStyle = selectedShape.color;
-            ctx.lineWidth = selectedShape.stroke;
+            
             const x2 = selectedShape.width + selectedShape.startX;
             const y2 = selectedShape.height + selectedShape.startY;
+
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
+
             DrawRectangle(
               ctx,
               event.clientX,
@@ -583,6 +628,7 @@ export const drawShape = (
             selectedShape.height = y2 - event.clientY;
           } else if (selectedShape.type == "rectangle" && BR) {
             // console.log(selectedShape);
+
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
 
@@ -597,9 +643,7 @@ export const drawShape = (
             selectedShape.width = event.clientX - selectedShape.startX;
             selectedShape.height = event.clientY - selectedShape.startY;
           } else if (selectedShape.type == "rectangle" && BL) {
-            ctx.strokeStyle = selectedShape.color;
-            ctx.lineWidth = selectedShape.stroke;
-
+           
             const newWidth = event.clientX - selectedShape.startX;
             const newHeight =
               selectedShape.startY + selectedShape.height - event.clientY;
@@ -607,6 +651,9 @@ export const drawShape = (
             selectedShape.startY = event.clientY;
             selectedShape.width = newWidth;
             selectedShape.height = newHeight;
+
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
 
             DrawRectangle(
               ctx,
@@ -616,8 +663,7 @@ export const drawShape = (
               selectedShape.height,
             );
           } else if (selectedShape.type == "rectangle" && TR) {
-            ctx.strokeStyle = selectedShape.color;
-            ctx.lineWidth = selectedShape.stroke;
+            
             const newWidth =
               selectedShape.startX + selectedShape.width - event.clientX;
             const newHeight = event.clientY - selectedShape.startY;
@@ -625,6 +671,10 @@ export const drawShape = (
             selectedShape.startX = event.clientX;
             selectedShape.width = newWidth;
             selectedShape.height = newHeight;
+
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
+
             ctx.strokeRect(
               selectedShape.startX,
               selectedShape.startY,
@@ -757,7 +807,9 @@ export const drawShape = (
           }
         }
       }
+
     }
+
   };
 
   const handleZoom = (event: WheelEvent) => {
@@ -794,4 +846,5 @@ export const drawShape = (
     mousemove: handleMouseMove,
     wheel: handleZoom,
   };
+
 };
