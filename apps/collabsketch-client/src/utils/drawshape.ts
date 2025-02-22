@@ -63,7 +63,7 @@ export const drawShape = (
     clicked = true;
     const rect = canvas.getBoundingClientRect();
     if (tool == "select") {
-      
+
       selectedShape = existingShape.find((shape) => {
         if (shape.type != "pencil") {
           selectedOffsetX = event.clientX - shape?.startX;
@@ -73,7 +73,7 @@ export const drawShape = (
             event.clientY - rect.top,
             shape,
           )
-        } 
+        }
         else {
 
           selectedOffsetX = event.clientX - shape?.path[0].x;
@@ -439,26 +439,26 @@ export const drawShape = (
         });
       } else if (tool == "select") {
 
-      if (!selectedShape) return;
+        if (!selectedShape) return;
 
-      existingShape = existingShape.filter((shape) => {
-        return shape.id !== selectedShape?.id;
-      });
+        existingShape = existingShape.filter((shape) => {
+          return shape.id !== selectedShape?.id;
+        });
 
-      if (
-        !TL &&
-        !TR &&
-        !BL &&
-        !BR &&
-        !ELR &&
-        !ELL &&
-        !ELT &&
-        !ELB &&
-        !LNS &&
-        !LNE &&
-        !ARRS &&
-        !ARRE
-       ) {
+        if (
+          !TL &&
+          !TR &&
+          !BL &&
+          !BR &&
+          !ELR &&
+          !ELL &&
+          !ELT &&
+          !ELB &&
+          !LNS &&
+          !LNE &&
+          !ARRS &&
+          !ARRE
+        ) {
           if (selectedShape.type == "rectangle") {
 
             ctx.strokeStyle = selectedShape.color;
@@ -565,39 +565,30 @@ export const drawShape = (
             selectedShape.moveY = newEndY - selecteOffsetY;
           } else if (selectedShape.type == "pencil") {
 
-            // let minX= Infinity;
-            // let minY = Infinity;
-            // let maxX = -Infinity;
-            // let maxY = -Infinity;
-      
-            // for(let i=0;i<selectedShape.path.length;i++){
-            //   minX=Math.min(minX, selectedShape.path[i].x);
-            //   minY=Math.min(minY, selectedShape.path[i].y);
-            //   maxX=Math.max(maxX, selectedShape.path[i].x);
-            //   maxY=Math.max(maxY, selectedShape.path[i].y);
-            // }
 
-            // ctx.strokeStyle="blue";
-            // ctx.lineWidth=0.3;
-            
-            // DrawRectangle(ctx, minX, minY, maxX-minX, maxY-minY);
-
-            // Logic to redraw a pencil
             const offsetX = event.clientX - selectedShape.path[0].x - selectedOffsetX;
             const offsetY = event.clientY - selectedShape.path[0].y - selecteOffsetY;
 
-            ctx.strokeStyle=color;
-            ctx.lineWidth=stroke;
+
+            ctx.strokeStyle = color;
+            ctx.lineWidth = stroke;
             ctx.beginPath();
 
-            for (let i = 1; i < selectedShape.path.length; i++) {
-              const prevPoint = selectedShape.path[i - 1]  ;
-              const currPoint = selectedShape.path[i] ;
-
-              ctx.moveTo(prevPoint.x + offsetX, prevPoint.y + offsetY );
-              ctx.lineTo(currPoint.x + offsetX, currPoint.y + offsetY);
-              
+            // Update the stored path with new coordinates
+            for (let i = 0; i < selectedShape.path.length; i++) {
+              selectedShape.path[i].x += offsetX;
+              selectedShape.path[i].y += offsetY;
             }
+
+            for (let i = 1; i < selectedShape.path.length; i++) {
+              const prevPoint = selectedShape.path[i - 1];
+              const currPoint = selectedShape.path[i];
+
+              ctx.moveTo(prevPoint.x + offsetX, prevPoint.y + offsetY);
+              ctx.lineTo(currPoint.x + offsetX, currPoint.y + offsetY);
+            }
+
+            // console.log("Points isss", prevPoint.x + offsetX, prevPoint.y + offsetY );
 
             ctx.stroke();
             console.log("Pencil shape moved", selectedShape);
@@ -607,7 +598,7 @@ export const drawShape = (
         } else {
           if (selectedShape.type == "rectangle" && TL) {
             // console.log(selectedShape);
-            
+
             const x2 = selectedShape.width + selectedShape.startX;
             const y2 = selectedShape.height + selectedShape.startY;
 
@@ -643,7 +634,7 @@ export const drawShape = (
             selectedShape.width = event.clientX - selectedShape.startX;
             selectedShape.height = event.clientY - selectedShape.startY;
           } else if (selectedShape.type == "rectangle" && BL) {
-           
+
             const newWidth = event.clientX - selectedShape.startX;
             const newHeight =
               selectedShape.startY + selectedShape.height - event.clientY;
@@ -663,7 +654,7 @@ export const drawShape = (
               selectedShape.height,
             );
           } else if (selectedShape.type == "rectangle" && TR) {
-            
+
             const newWidth =
               selectedShape.startX + selectedShape.width - event.clientX;
             const newHeight = event.clientY - selectedShape.startY;
