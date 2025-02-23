@@ -29,7 +29,7 @@ const Toolbar = ({ setTool, tool }: ToolProps) => {
     { id: "line" as Tool, icon: Minus },
     { id: "arrow" as Tool, icon: MoveUpRight },
     { id: "pencil" as Tool, icon: Pencil },
-    { id: "text" as Tool, icon: Type },
+    // { id: "text" as Tool, icon: Type },
     { id: "eraser" as Tool, icon: Eraser },
     { id: "select" as Tool, icon: MousePointer },
   ];
@@ -52,14 +52,14 @@ const Toolbar = ({ setTool, tool }: ToolProps) => {
           );
         })}
 
-        <button
+        {/* <button
           className={`${tool == "undo" ? "bg-purple-200" : ""} p-2 rounded transition-all duration-500 cursor-pointer bg-gray-100`}
         >
           <Undo2
             className={`w-4 h-4 transition-all duration-500 text-gray-700`}
           />
-        </button>
-        <Modal />
+        </button> */}
+        {/* <Modal /> */}
       </div>
     </div>
   );

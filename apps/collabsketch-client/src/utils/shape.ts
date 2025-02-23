@@ -4,7 +4,13 @@ export const DrawEllipse = (
   startY: number,
   width: number,
   height: number,
+  stroke?: number | 1,
+  color?: string | "black",
 ) => {
+  if (stroke && color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = stroke;
+  }
   const radius = Math.sqrt(width ** 2 + height ** 2);
   ctx.beginPath();
   ctx.arc(startX, startY, radius, 0, 2 * Math.PI);

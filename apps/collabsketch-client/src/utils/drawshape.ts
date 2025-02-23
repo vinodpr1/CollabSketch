@@ -184,6 +184,8 @@ export const drawShape = (
           selectedShape.startY,
           5,
           6,
+          1,
+          "black",
         );
         DrawEllipse(
           ctx,
@@ -191,6 +193,8 @@ export const drawShape = (
           selectedShape.startY,
           5,
           6,
+          1,
+          "black",
         );
         DrawEllipse(
           ctx,
@@ -198,6 +202,8 @@ export const drawShape = (
           selectedShape.startY + selectedShape.radius,
           5,
           6,
+          1,
+          "black",
         );
         DrawEllipse(
           ctx,
@@ -205,6 +211,8 @@ export const drawShape = (
           selectedShape.startY - selectedShape.radius,
           5,
           6,
+          1,
+          "black",
         );
 
         ELR = findInterSection(event.clientX, event.clientY, right);
@@ -215,8 +223,24 @@ export const drawShape = (
         if (ELR || ELL || ELT || ELB)
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
       } else if (selectedShape?.type == "line") {
-        DrawEllipse(ctx, selectedShape.startX, selectedShape.startY, 7, 8);
-        DrawEllipse(ctx, selectedShape.moveX, selectedShape.moveY, 7, 8);
+        DrawEllipse(
+          ctx,
+          selectedShape.startX,
+          selectedShape.startY,
+          7,
+          8,
+          1,
+          "black",
+        );
+        DrawEllipse(
+          ctx,
+          selectedShape.moveX,
+          selectedShape.moveY,
+          7,
+          8,
+          1,
+          "black",
+        );
 
         const right = checkCorner(
           -1,
@@ -244,8 +268,24 @@ export const drawShape = (
           document.getElementsByTagName("body")[0].style.cursor = "pointer";
         }
       } else if (selectedShape?.type == "arrow") {
-        DrawEllipse(ctx, selectedShape.startX, selectedShape.startY, 7, 8);
-        DrawEllipse(ctx, selectedShape.moveX, selectedShape.moveY, 7, 8);
+        DrawEllipse(
+          ctx,
+          selectedShape.startX,
+          selectedShape.startY,
+          7,
+          8,
+          1,
+          "black",
+        );
+        DrawEllipse(
+          ctx,
+          selectedShape.moveX,
+          selectedShape.moveY,
+          7,
+          8,
+          1,
+          "black",
+        );
 
         const right = checkCorner(
           -1,
@@ -324,7 +364,7 @@ export const drawShape = (
         id: existingShape.length,
         type: "pencil",
         color: color,
-        stroke: 1,
+        stroke: stroke,
         path: pencilPath,
       };
 
@@ -554,8 +594,8 @@ export const drawShape = (
             const offsetY =
               event.clientY - selectedShape.path[0].y - selecteOffsetY;
 
-            ctx.strokeStyle = color;
-            ctx.lineWidth = stroke;
+            ctx.strokeStyle = selectedShape.color;
+            ctx.lineWidth = selectedShape.stroke;
             ctx.beginPath();
 
             // Update the stored path with new coordinates
