@@ -102,14 +102,14 @@ function page() {
                   setSearchQuery(e.target.value);
                   if (e.target.value == "") setFilterRooms(rooms);
                 }}
-                className="w-full sm:w-64 pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
+                className="w-full sm:w-64 pl-10 pr-4 py-1 border border-gray-300 rounded-lg outline-none text-gray-600 bg-white/80 backdrop-blur-sm"
               />
               <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
             </div>
 
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-full flex items-center justify-center gap-2 transition-colors duration-300"
+              className="bg-purple-500 hover:bg-purple-400 text-white font-medium py-2 px-4 rounded-full flex items-center justify-center gap-2 transition-colors duration-300"
             >
               <Plus className="w-5 h-5" />
               <span>Create Room</span>
@@ -122,11 +122,6 @@ function page() {
               <LogOut />
             </button>
           </div>
-        </div>
-
-        {/* Category Filter */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0">
-          All Rooms
         </div>
 
         {/* Room Grid */}
@@ -162,15 +157,8 @@ function page() {
                   </div>
 
                   <div className="p-3 sm:p-4 flex-grow">
-                    <div className="flex justify-between items-center mb-3 sm:mb-4">
-                      <span className="flex items-center gap-1.5 sm:gap-2 text-gray-600 text-sm sm:text-base">
-                        <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="font-medium">participants</span>
-                      </span>
-                    </div>
-
                     <Link href={`/draw/${room.slug}`}>
-                      <button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1 sm:py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm sm:text-base">
+                      <button className="w-full bg-purple-500 hover:bg-purple-400 text-white font-medium py-1 sm:py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm sm:text-base">
                         Join Room
                         <ArrowRightCircle className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
                       </button>
@@ -186,9 +174,9 @@ function page() {
       {/* Create Room Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
-          <div className="bg-white rounded-2xl p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-700">
                 Create New Room
               </h2>
               <button
@@ -208,7 +196,7 @@ function page() {
                   type="text"
                   value={newRoom}
                   onChange={(e) => setNewRoom(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
+                  className="w-full px-3 py-2 text-base text-gray-700 border border-gray-300 rounded outline-none focus:outline-none"
                   placeholder="Enter room name"
                 />
               </div>
@@ -216,7 +204,7 @@ function page() {
               <button
                 onClick={handleCreateRoom}
                 disabled={!newRoom}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 mt-4 text-base"
+                className="w-full bg-purple-500 hover:bg-purple-400 disabled:bg-gray-300 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 mt-4 text-base"
               >
                 Create Room
               </button>
