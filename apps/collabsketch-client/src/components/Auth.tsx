@@ -17,19 +17,22 @@ function Auth({ comp }: { comp: string }) {
   });
 
   const handleSubmit = async () => {
-    const response = await axios.post(
-      `${HTTP_BACKEND_URL}/user/${comp == "signin" ? "signin" : "signup"}`,
-      userData,
-    );
-    if (response.data) {
-      setAuthToken(response.data.token);
-      router.push("/rooms");
+    try {
+      const response = await axios.post(
+        `${HTTP_BACKEND_URL}/user/${comp == "signin" ? "signin" : "signup"}`,
+        userData,
+      );
+      if (response.data) {
+        setAuthToken(response.data.token);
+        router.push("/rooms");
+      }
+    } catch (error) {
+      console.log("Error has occured", error);
     }
   };
 
   useEffect(() => {
     const token = getAuthToken(); // Check for token in localStorage
-
     if (token) {
       router.push("/rooms"); // Redirect to main page if authenticated
     }
