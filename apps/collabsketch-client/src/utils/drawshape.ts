@@ -3,10 +3,10 @@ import { checkCorner, findInterSection } from "./intersection-point";
 import { zoom } from "./zoom-in-out";
 import { ExistingShape, Pencil } from "@/interfaces/interface";
 import { DrawEllipse, DrawLine, DrawRectangle } from "./shape";
+import { getShapes } from "./db-shapes";
 
 let existingShape: ExistingShape[] = [];
 let pencilPath: Pencil[] = [];
-let replacePencilPath: Pencil[] = [];
 
 let scale = 1; // Initial scale
 let minScale = 0.5;
@@ -14,7 +14,7 @@ let maxScale = 2;
 let offsetX = 0;
 let offsetY = 0;
 
-export const drawShape = (
+export const drawShape = async (
   canvas: HTMLCanvasElement,
   socket: WebSocket,
   roomid: any,
@@ -24,6 +24,9 @@ export const drawShape = (
 ) => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+
+  const prevShapes = await getShapes(roomid);
+  existingShape = prevShapes;
 
   drawShapesBeforeClear(ctx, canvas, existingShape);
 
