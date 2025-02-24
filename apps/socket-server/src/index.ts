@@ -38,7 +38,6 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
   // let's check if the user aalready joined that particular room or not?
 
   const existingUser = users.find((user) => user.userId == userData.id);
-  console.log("new connection createdddd");
 
   if (existingUser) {
     existingUser.ws = ws; // Update WebSocket instance
@@ -49,14 +48,10 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
     if (!slug) return;
     const user = { userId: userData.id, rooms: [slug], ws: ws };
     users.push(user);
-    console.log("Users that exixttttt", users);
   }
-
-  console.log("All usersss", users);
 
   ws.on("message", async (message: any) => {
     const data = JSON.parse(message.toString());
-    console.log("Message logged");
 
     //  find the roomid based upon slug in url
     // const room = await prismaClient.room.findFirst({ where: { slug: slug } });
@@ -75,18 +70,18 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
 
     if (!slug) return;
     users.forEach((user) => {
-      console.log("Userrrrrrr", user.userId);
-      if (user.rooms.includes(slug)) {
+      console.log("i also connected user",user.userId);
+      if (user.userId !== userData.id && user.rooms.includes(slug)) {
+        console.log("Inside", user.userId);
         user.ws.send(JSON.stringify(data));
       }
     });
   });
 
   ws.on("close", () => {
-    console.log(`User ${userData.id} disconnected`);
     const index = users.findIndex((user) => user.userId === userData.id);
     if (index !== -1) {
-      users.splice(index, 1); // Remove user from the list
+      users.splice(index, 1);
     }
   });
 });

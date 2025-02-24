@@ -1,4 +1,5 @@
 import { ExistingShape } from "@/interfaces/interface";
+import { DrawLine } from "./shape";
 export const drawShapesBeforeClear = (
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
@@ -33,30 +34,34 @@ export const drawShapesBeforeClear = (
       ctx.stroke();
       ctx.closePath();
     } else if (shape.type == "arrow") {
-      ctx.beginPath();
-      ctx.moveTo(shape.startX, shape.startY);
-      ctx.lineTo(shape.moveX, shape.moveY);
-      ctx.stroke();
-      ctx.closePath();
+
+      DrawLine(
+        ctx,
+        shape.startX, 
+        shape.startY,
+        shape.moveX,
+        shape.moveY
+      );
 
       const arrowLen = 10;
       let dx = shape.moveX - shape.startX;
       let dy = shape.moveY - shape.startY;
       let angle = Math.atan2(dy, dx);
-
-      ctx.moveTo(shape.moveX, shape.moveY);
-      ctx.lineTo(
+      // small line to show arrow
+      DrawLine(
+        ctx,
+        shape.moveX,
+        shape.moveY,
         shape.moveX - arrowLen * Math.cos(angle - Math.PI / 6),
         shape.moveY - arrowLen * Math.sin(angle - Math.PI / 6),
       );
-      ctx.stroke();
-
-      ctx.moveTo(shape.moveX, shape.moveY);
-      ctx.lineTo(
+      DrawLine(
+        ctx,
+        shape.moveX,
+        shape.moveY,
         shape.moveX - arrowLen * Math.cos(angle + Math.PI / 6),
         shape.moveY - arrowLen * Math.sin(angle + Math.PI / 6),
       );
-      ctx.stroke();
     }
   });
 };
