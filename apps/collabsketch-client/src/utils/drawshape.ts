@@ -2,7 +2,7 @@ import { drawShapesBeforeClear } from "./redraw-shape";
 import { checkCorner, findInterSection } from "./intersection-point";
 import { zoom } from "./zoom-in-out";
 import { ExistingShape, Pencil } from "@/interfaces/interface";
-import { DrawEllipse, DrawLine, DrawRectangle } from "./shape";
+import { DrawEllipse, DrawLine, DrawPencil, DrawRectangle } from "./shape";
 import { getShapes } from "./db-shapes";
 
 let existingShape: ExistingShape[] = [];
@@ -455,12 +455,7 @@ export const drawShape = async (
         const currentX = event.clientX - rect.left;
         const currentY = event.clientY - rect.top;
         pencilPath.push({ x: currentX, y: currentY });
-        ctx.beginPath();
-        for (let i = 1; i < pencilPath.length; i++) {
-          ctx.moveTo(pencilPath[i - 1].x, pencilPath[i - 1].y);
-          ctx.lineTo(pencilPath[i].x, pencilPath[i].y);
-        }
-        ctx.stroke();
+        DrawPencil(ctx, pencilPath);
       } else if (tool == "eraser") {
         existingShape = existingShape.filter((shape) => {
           return !findInterSection(
@@ -849,7 +844,7 @@ export const drawShape = async (
   canvas.addEventListener("mousedown", handleMouseDown);
   canvas.addEventListener("mouseup", handleMouseUp);
   canvas.addEventListener("mousemove", handleMouseMove);
-  // passivw - allows preventdefault to work
+  // passive - allows preventdefault to work
   canvas.addEventListener("wheel", handleZoom, { passive: false });
 
   // Save new event listeners reference

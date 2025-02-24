@@ -1,5 +1,5 @@
 import { ExistingShape } from "@/interfaces/interface";
-import { DrawLine } from "./shape";
+import { DrawEllipse, DrawLine, DrawPencil, DrawRectangle } from "./shape";
 export const drawShapesBeforeClear = (
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
@@ -11,28 +11,13 @@ export const drawShapesBeforeClear = (
     ctx.strokeStyle = shape.color;
     ctx.lineWidth = shape.stroke;
     if (shape.type == "rectangle") {
-      ctx.strokeRect(shape.startX, shape.startY, shape.width, shape.height);
+      DrawRectangle(ctx,shape.startX, shape.startY, shape.width, shape.height);
     } else if (shape.type == "ellipse") {
-      ctx.beginPath();
-      ctx.arc(shape.startX, shape.startY, shape.radius, 0, 2 * Math.PI); // Circle centered at (100, 100) with radius 50
-      ctx.lineWidth = shape.stroke;
-      ctx.stroke();
-      ctx.closePath();
+      DrawEllipse(ctx, shape.startX, shape.startY, shape.radius, 0, 2 * Math.PI);
     } else if (shape.type == "line") {
-      ctx.beginPath();
-      ctx.moveTo(shape.startX, shape.startY);
-      ctx.lineTo(shape.moveX, shape.moveY);
-      ctx.stroke();
-      ctx.closePath();
+      DrawLine(ctx, shape.startX, shape.startY, shape.moveX, shape.moveY);
     } else if (shape.type == "pencil") {
-      ctx.beginPath();
-
-      for (let i = 1; i < shape.path.length; i++) {
-        ctx.moveTo(shape.path[i - 1].x, shape.path[i - 1].y);
-        ctx.lineTo(shape.path[i].x, shape.path[i].y);
-      }
-      ctx.stroke();
-      ctx.closePath();
+      DrawPencil(ctx, shape.path);
     } else if (shape.type == "arrow") {
 
       DrawLine(
