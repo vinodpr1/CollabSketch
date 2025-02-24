@@ -1,32 +1,19 @@
 import { WebSocketServer, WebSocket } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prismaClient } from "@repo/db/prismaclient";
-
+import { IncomingMessage } from "http"
 const wss = new WebSocketServer({ port: 8100 });
 
 interface User {
-  userId: Number | null;
+  userId: number;
   rooms: string[];
   ws: WebSocket;
 }
 
-type Message = {
-  type: string;
-  message: string;
-  room: string;
-};
 
 let users: User[] = [];
 
-function broadcastMessage(message: any) {
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
-    }
-  });
-}
-
-wss.on("connection", (ws: WebSocket, req: Request) => {
+wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
   const rawSlug = req?.url?.split("=")[2];
   const slug = rawSlug?.split("%20").join(" ");
 
@@ -37,7 +24,7 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
 
   // let's check if the user aalready joined that particular room or not?
 
-  const existingUser = users.find((user) => user.userId == userData.id);
+  const existingUser = users.find((user:User) => user.userId === userData.id);
 
   if (existingUser) {
     existingUser.ws = ws; // Update WebSocket instance
@@ -50,9 +37,11 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
     users.push(user);
   }
 
-  ws.on("message", async (message: any) => {
+  ws.on("message", async (message: string) => {
     const data = JSON.parse(message.toString());
-
+   
+    console.log("shape from client", message.toString());
+    
     //  find the roomid based upon slug in url
     // const room = await prismaClient.room.findFirst({ where: { slug: slug } });
     // if (!room) return;
@@ -69,7 +58,7 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
     // });
 
     if (!slug) return;
-    users.forEach((user) => {
+    users.forEach((user:User) => {
       console.log("i also connected user",user.userId);
       if (user.userId !== userData.id && user.rooms.includes(slug)) {
         console.log("Inside", user.userId);
@@ -79,9 +68,6 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
   });
 
   ws.on("close", () => {
-    const index = users.findIndex((user) => user.userId === userData.id);
-    if (index !== -1) {
-      users.splice(index, 1);
-    }
+    users = users.filter((user:User)=>user.userId !== userData.id)
   });
 });
