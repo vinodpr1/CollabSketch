@@ -20,7 +20,7 @@ class RoomRepository {
       const response = await prismaClient.room.findMany();
       return response;
     } catch (error) {
-      console.log("Eoor has occured at repository controller");
+      console.log("Eoor has occured at repository controller", error);
       throw error;
     }
   }
@@ -32,7 +32,7 @@ class RoomRepository {
       });
       return response;
     } catch (error) {
-      console.log("Eoor has occured at repository controller");
+      console.log("Eoor has occured at repository controller", error);
       throw error;
     }
   }

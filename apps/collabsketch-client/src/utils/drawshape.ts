@@ -25,8 +25,8 @@ export const drawShape = async (
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const prevShapes = await getShapes(roomid);
-  existingShape = prevShapes;
+  // const prevShapes = await getShapes(roomid);
+  // existingShape = prevShapes;
 
   drawShapesBeforeClear(ctx, canvas, existingShape);
 
@@ -395,6 +395,7 @@ export const drawShape = async (
 
     socket.send(JSON.stringify(shape));
     socket.onmessage = (event) => {
+      console.log("Event from Web Socket", event.data);
       existingShape.push(JSON.parse(event.data));
       drawShapesBeforeClear(ctx, canvas, existingShape);
     };

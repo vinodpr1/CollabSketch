@@ -29,7 +29,7 @@ const Toolbar = ({ setTool, tool }: ToolProps) => {
     { id: "line" as Tool, icon: Minus },
     { id: "arrow" as Tool, icon: MoveUpRight },
     { id: "pencil" as Tool, icon: Pencil },
-    // { id: "text" as Tool, icon: Type },
+    { id: "text" as Tool, icon: Type },
     { id: "eraser" as Tool, icon: Eraser },
     { id: "select" as Tool, icon: MousePointer },
   ];

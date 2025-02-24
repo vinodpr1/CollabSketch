@@ -16,24 +16,7 @@ type Message = {
   room: string;
 };
 
-const users: User[] = [];
-
-// const handleMessages=(users:User[], data:Message, ws: WebSocket)=>{
-//     if (data.type == "join_room") {
-//        const user = users.find(user=>user.ws == ws);
-//        user?.rooms.push(data.room);
-//     } else if(data.type == "chat") {
-//       users.forEach((user)=>{
-//          if(user.rooms.includes(data.room)){
-//             user.ws.send(data.message);
-//          }
-//       })
-//     }else{
-//       users.map((user)=>{
-//          user.ws.send(data.message);
-//       })
-//     }
-// }
+let users: User[] = [];
 
 function broadcastMessage(message: any) {
   wss.clients.forEach((client) => {
@@ -52,48 +35,58 @@ wss.on("connection", (ws: WebSocket, req: Request) => {
   if (!token) return;
   const userData = jwt.verify(token, "vinodpr") as JwtPayload;
 
-  // let's check if the user aalready joined that particular room?
+  // let's check if the user aalready joined that particular room or not?
 
-  const isExist = users.find((user) => user.userId == userData.id);
+  const existingUser = users.find((user) => user.userId == userData.id);
+  console.log("new connection createdddd");
 
-  if (isExist) {
-    if (!slug) return;
-    isExist.rooms.push(slug);
+  if (existingUser) {
+    existingUser.ws = ws; // Update WebSocket instance
+    if (slug && !existingUser.rooms.includes(slug)) {
+      existingUser.rooms.push(slug);
+    }
   } else {
     if (!slug) return;
-    const user = { userId: userData.id, rooms: [], ws: ws };
-    //@ts-ignore
-    user.rooms.push(slug);
+    const user = { userId: userData.id, rooms: [slug], ws: ws };
     users.push(user);
+    console.log("Users that exixttttt", users);
   }
 
   console.log("All usersss", users);
 
-  //  users.push({
-  //    userId: userData.id,
-  //    rooms: [],
-  //  });
-
   ws.on("message", async (message: any) => {
     const data = JSON.parse(message.toString());
+    console.log("Message logged");
 
     //  find the roomid based upon slug in url
-    const room = await prismaClient.room.findFirst({ where: { slug: slug } });
-    if (!room) return;
+    // const room = await prismaClient.room.findFirst({ where: { slug: slug } });
+    // if (!room) return;
+
+    // console.log("Room is", room , "slug is", slug);
 
     //  dump messages in chat tableesss
-    const x = await prismaClient.chat.create({
-      data: {
-        message: JSON.stringify(data),
-        senderid: userData.id,
-        roomid: room.id,
-      },
-    });
+    // const x = await prismaClient.chat.create({
+    //   data: {
+    //     message: JSON.stringify(data),
+    //     senderid: userData.id,
+    //     roomid: room.id,
+    //   },
+    // });
 
+    if (!slug) return;
     users.forEach((user) => {
+      console.log("Userrrrrrr", user.userId);
       if (user.rooms.includes(slug)) {
         user.ws.send(JSON.stringify(data));
       }
     });
+  });
+
+  ws.on("close", () => {
+    console.log(`User ${userData.id} disconnected`);
+    const index = users.findIndex((user) => user.userId === userData.id);
+    if (index !== -1) {
+      users.splice(index, 1); // Remove user from the list
+    }
   });
 });
