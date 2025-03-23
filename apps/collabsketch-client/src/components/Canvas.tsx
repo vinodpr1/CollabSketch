@@ -52,8 +52,6 @@ const Canvas = ({ socket, roomid }: { socket: WebSocket; roomid: any }) => {
         ref={canvasRef}
         height={1280}
         width={1680}
-        // height={980}
-        // width={1780}
         className={` bg-white bg-[linear-gradient(to_right,#ede4e4_1px,transparent_1px),linear-gradient(to_bottom,#ede4e4_1px,transparent_1px)] bg-[size:6rem_4rem]`}
       />
     </div>

@@ -13,6 +13,7 @@ interface User {
 let users: User[] = [];
 
 wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
+  console.log("uRLSS", req.url);
   const rawSlug = req?.url?.split("=")[2];
   const slug = rawSlug?.split("%20").join(" ");
 
@@ -38,20 +39,8 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
   }
   ws.on("message", async (message: string) => {
     const data = JSON.parse(message.toString());
-    console.log("shape from client", JSON.parse(message.toString()));
-
-    const room = await prismaClient.room.findFirst({ where: { slug: slug } });
-    if (!room) return;
-
-    const x = await prismaClient.chat.create({
-      data: {
-        message: JSON.stringify(data),
-        senderid: userData.id,
-        roomid: room.id,
-      },
-    });
-
-    console.log(x);
+   
+   
     if (!slug) return;
 
     users.forEach(async (user: User) => {
@@ -61,6 +50,20 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
         }
       }
     });
+
+
+    const room = await prismaClient.room.findFirst({ where: { slug: slug } });
+    if (!room) return;
+
+    await prismaClient.chat.create({
+      data: {
+        message: JSON.stringify(data),
+        senderid: userData.id,
+        roomid: room.id,
+      },
+    });
+
+
   });
 
   ws.on("close", () => {

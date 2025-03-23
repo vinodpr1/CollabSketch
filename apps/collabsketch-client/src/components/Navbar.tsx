@@ -1,7 +1,11 @@
+"use client";
 import { Github, LogOut, UserCheck } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const session  = useSession();
+
   return (
     <div className="h-12 py-2 flex items-center px-6 border-b border-gray-300">
       <nav className="flex items-center mx-auto max-w-6xl w-full">
@@ -18,6 +22,7 @@ const Navbar = () => {
                 <li>
                   <Link href={"/rooms"}>Rooms</Link>
                 </li>
+                {JSON.stringify(session)}
               </ul>
             </div>
           </div>
