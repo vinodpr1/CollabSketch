@@ -2,12 +2,12 @@
 import { Spin } from "antd";
 import Canvas from "./Canvas";
 import useSocket from "@/hooks/useSocket";
+import { useSession } from "next-auth/react";
 
 const CanvasRoom = (roomid: any) => {
   const { loading, socket } = useSocket(roomid.roomid);
-
-  // if (!socket) return <div className="flex justify-center items-center pt-12"><Spin/></div>
-
+  const session = useSession();
+  console.log(session);
   return !socket ? (
     <div className="flex justify-center items-center pt-12">Loading....</div>
   ) : (

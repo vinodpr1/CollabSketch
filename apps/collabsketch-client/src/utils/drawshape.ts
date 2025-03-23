@@ -25,8 +25,8 @@ export const drawShape = async (
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  // const prevShapes = await getShapes(roomid);
-  // existingShape = prevShapes;
+  const prevShapes = await getShapes(roomid);
+  existingShape = prevShapes;
 
   drawShapesBeforeClear(ctx, canvas, existingShape);
 
@@ -393,9 +393,16 @@ export const drawShape = async (
     if (!shape) return;
     existingShape.push(shape);
 
-    socket.send(JSON.stringify(shape));
-    socket.onmessage = (event) => {
+    // socket.send(JSON.stringify(shape));
+
+    setTimeout(() => {
+      socket.send(JSON.stringify(shape));
+    }, 100);
+
+    socket.onmessage = async (event) => {
       console.log("Event from Web Socket", event.data);
+      const x = await event.data;
+      console.log("ZZZZZZZZ", x);
       existingShape.push(JSON.parse(event.data));
       drawShapesBeforeClear(ctx, canvas, existingShape);
     };
@@ -599,8 +606,12 @@ export const drawShape = async (
 
             // Update the stored path with new coordinates
             for (let i = 0; i < selectedShape.path.length; i++) {
-              selectedShape.path[i].x += offsetX;
-              selectedShape.path[i].y += offsetY;
+              selectedShape.path[i].x = Math.abs(
+                selectedShape.path[i].x + offsetX,
+              );
+              selectedShape.path[i].y = Math.abs(
+                selectedShape.path[i].y + offsetY,
+              );
             }
 
             for (let i = 1; i < selectedShape.path.length; i++) {
@@ -847,7 +858,7 @@ export const drawShape = async (
   // passive - allows preventdefault to work
   canvas.addEventListener("wheel", handleZoom, { passive: false });
 
-  // Save new event listeners reference
+  // reference to event listeners reference
   (canvas as any)._eventListeners = {
     mousedown: handleMouseDown,
     mouseup: handleMouseUp,

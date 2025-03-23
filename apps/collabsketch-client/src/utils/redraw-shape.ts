@@ -11,22 +11,22 @@ export const drawShapesBeforeClear = (
     ctx.strokeStyle = shape.color;
     ctx.lineWidth = shape.stroke;
     if (shape.type == "rectangle") {
-      DrawRectangle(ctx,shape.startX, shape.startY, shape.width, shape.height);
+      DrawRectangle(ctx, shape.startX, shape.startY, shape.width, shape.height);
     } else if (shape.type == "ellipse") {
-      DrawEllipse(ctx, shape.startX, shape.startY, shape.radius, 0, 2 * Math.PI);
+      DrawEllipse(
+        ctx,
+        shape.startX,
+        shape.startY,
+        shape.radius,
+        0,
+        2 * Math.PI,
+      );
     } else if (shape.type == "line") {
       DrawLine(ctx, shape.startX, shape.startY, shape.moveX, shape.moveY);
     } else if (shape.type == "pencil") {
       DrawPencil(ctx, shape.path);
     } else if (shape.type == "arrow") {
-
-      DrawLine(
-        ctx,
-        shape.startX, 
-        shape.startY,
-        shape.moveX,
-        shape.moveY
-      );
+      DrawLine(ctx, shape.startX, shape.startY, shape.moveX, shape.moveY);
 
       const arrowLen = 10;
       let dx = shape.moveX - shape.startX;

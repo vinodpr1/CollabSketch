@@ -1,7 +1,7 @@
 import { WebSocketServer, WebSocket } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prismaClient } from "@repo/db/prismaclient";
-import { IncomingMessage } from "http"
+import { IncomingMessage } from "http";
 const wss = new WebSocketServer({ port: 8100 });
 
 interface User {
@@ -9,7 +9,6 @@ interface User {
   rooms: string[];
   ws: WebSocket;
 }
-
 
 let users: User[] = [];
 
@@ -22,12 +21,13 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
   if (!token) return;
   const userData = jwt.verify(token, "vinodpr") as JwtPayload;
 
-  // let's check if the user aalready joined that particular room or not?
+  console.log(slug, userData);
 
-  const existingUser = users.find((user:User) => user.userId === userData.id);
+  // checking if the user aalready joined that particular room or not?
+  const existingUser = users.find((user: User) => user.userId === userData.id);
 
   if (existingUser) {
-    existingUser.ws = ws; // Update WebSocket instance
+    existingUser.ws = ws;
     if (slug && !existingUser.rooms.includes(slug)) {
       existingUser.rooms.push(slug);
     }
@@ -36,38 +36,34 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
     const user = { userId: userData.id, rooms: [slug], ws: ws };
     users.push(user);
   }
-
   ws.on("message", async (message: string) => {
     const data = JSON.parse(message.toString());
-   
-    console.log("shape from client", message.toString());
-    
-    //  find the roomid based upon slug in url
-    // const room = await prismaClient.room.findFirst({ where: { slug: slug } });
-    // if (!room) return;
+    console.log("shape from client", JSON.parse(message.toString()));
 
-    // console.log("Room is", room , "slug is", slug);
+    const room = await prismaClient.room.findFirst({ where: { slug: slug } });
+    if (!room) return;
 
-    //  dump messages in chat tableesss
-    // const x = await prismaClient.chat.create({
-    //   data: {
-    //     message: JSON.stringify(data),
-    //     senderid: userData.id,
-    //     roomid: room.id,
-    //   },
-    // });
+    const x = await prismaClient.chat.create({
+      data: {
+        message: JSON.stringify(data),
+        senderid: userData.id,
+        roomid: room.id,
+      },
+    });
 
+    console.log(x);
     if (!slug) return;
-    users.forEach((user:User) => {
-      console.log("i also connected user",user.userId);
+
+    users.forEach(async (user: User) => {
       if (user.userId !== userData.id && user.rooms.includes(slug)) {
-        console.log("Inside", user.userId);
-        user.ws.send(JSON.stringify(data));
+        if (user.ws.readyState === WebSocket.OPEN) {
+          user.ws.send(JSON.stringify(data));
+        }
       }
     });
   });
 
   ws.on("close", () => {
-    users = users.filter((user:User)=>user.userId !== userData.id)
+    users = users.filter((user: User) => user.userId !== userData.id);
   });
 });

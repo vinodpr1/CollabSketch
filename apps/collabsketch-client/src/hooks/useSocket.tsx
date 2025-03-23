@@ -6,7 +6,7 @@ const useSocket = (slug: string) => {
 
   useEffect(() => {
     const wss = new WebSocket(
-      `ws://localhost:8100?userid=${localStorage.getItem("token")}&slug=${slug}`,
+      `ws://localhost:8100?userid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0MDM3OTkwLWU4ODYtNDJhZS04MjkyLWNmN2MxYWEwYjIwMCIsImlhdCI6MTc0MjY0NjAzN30.fdZJ7IpHwZoEbBNHzIauYi8_idgjmbU3Y4HZXY2PJiE&slug=${slug}`,
     );
     wss.onopen = () => {
       setSocket(wss);

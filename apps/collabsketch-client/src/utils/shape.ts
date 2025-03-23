@@ -42,11 +42,11 @@ export const DrawRectangle = (
   ctx.strokeRect(startX, startY, width, height);
 };
 
-export const DrawPencil = (ctx: CanvasRenderingContext2D ,  pencilPath:any) =>{
-   ctx.beginPath();
-   for (let i = 1; i < pencilPath.length; i++) {
-     ctx.moveTo(pencilPath[i - 1].x, pencilPath[i - 1].y);
-     ctx.lineTo(pencilPath[i].x, pencilPath[i].y);
-   }
-   ctx.stroke();
-}
+export const DrawPencil = (ctx: CanvasRenderingContext2D, pencilPath: any) => {
+  ctx.beginPath();
+  for (let i = 1; i < pencilPath.length; i++) {
+    ctx.moveTo(pencilPath[i - 1].x, pencilPath[i - 1].y);
+    ctx.lineTo(pencilPath[i].x, pencilPath[i].y);
+  }
+  ctx.stroke();
+};
