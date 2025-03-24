@@ -25,8 +25,9 @@ export const drawShape = async (
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const prevShapes = await getShapes(roomid);
-  existingShape = prevShapes;
+  // taking shapes from database (pre-existing hshapesss)
+  // const prevShapes = await getShapes(roomid);
+  // existingShape = prevShapes;
 
   drawShapesBeforeClear(ctx, canvas, existingShape);
 

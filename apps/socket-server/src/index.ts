@@ -13,7 +13,7 @@ interface User {
 let users: User[] = [];
 
 wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
-  console.log("uRLSS", req.url);
+  console.log("connected to the server");
   const rawSlug = req?.url?.split("=")[2];
   const slug = rawSlug?.split("%20").join(" ");
 
@@ -21,8 +21,6 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
   const token = urlParams.get("userid");
   if (!token) return;
   const userData = jwt.verify(token, "vinodpr") as JwtPayload;
-
-  console.log(slug, userData);
 
   // checking if the user aalready joined that particular room or not?
   const existingUser = users.find((user: User) => user.userId === userData.id);
@@ -37,12 +35,11 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
     const user = { userId: userData.id, rooms: [slug], ws: ws };
     users.push(user);
   }
+
   ws.on("message", async (message: string) => {
     const data = JSON.parse(message.toString());
-   
-   
     if (!slug) return;
-
+    console.log("Shape",data);
     users.forEach(async (user: User) => {
       if (user.userId !== userData.id && user.rooms.includes(slug)) {
         if (user.ws.readyState === WebSocket.OPEN) {
@@ -51,18 +48,16 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
       }
     });
 
+    // const room = await prismaClient.room.findFirst({ where: { slug: slug } });
+    // if (!room) return;
 
-    const room = await prismaClient.room.findFirst({ where: { slug: slug } });
-    if (!room) return;
-
-    await prismaClient.chat.create({
-      data: {
-        message: JSON.stringify(data),
-        senderid: userData.id,
-        roomid: room.id,
-      },
-    });
-
+    // await prismaClient.chat.create({
+    //   data: {
+    //     message: JSON.stringify(data),
+    //     senderid: userData.id,
+    //     roomid: room.id,
+    //   },
+    // });
 
   });
 

@@ -1,10 +1,13 @@
 "use client";
 import { Github, LogOut, UserCheck } from "lucide-react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 const Navbar = () => {
-  const session  = useSession();
+  const {status, data}  = useSession();
+  console.log(status, data);
+  const isloading = status=="loading" ? true : false;
 
   return (
     <div className="h-12 py-2 flex items-center px-6 border-b border-gray-300">
@@ -22,7 +25,9 @@ const Navbar = () => {
                 <li>
                   <Link href={"/rooms"}>Rooms</Link>
                 </li>
-                {JSON.stringify(session)}
+                <li className="">
+                  <Link href="/">{JSON.stringify(data?.user?.email)}</Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -35,11 +40,23 @@ const Navbar = () => {
               >
                 <Github className="h-5 w-5 mr-1" />
               </Link>
-              <Link href="/auth" className="text-sm">
-                <button className="px-2 py-1 bg-gray-200 rounded">
-                  Log in
-                </button>
-              </Link>
+              <div>
+                
+                {
+                   !isloading && data?.user &&
+                   <button onClick={()=>signOut()} className="px-2 py-1 bg-gray-200 rounded">
+                    Logout
+                   </button>
+                }
+                {
+                  !isloading && !data?.user &&
+                  <button onClick={()=>signIn()} className="px-2 py-1 bg-gray-200 rounded">
+                     Log in
+                  </button>  
+                } 
+                { isloading &&  <div className="px-[30px] py-1"> </div> }
+               
+              </div>
             </div>
           </div>
         </div>
