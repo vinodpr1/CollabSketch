@@ -11,15 +11,14 @@ const useWebSocket = (roomId: string, jwtToken: string | null) => {
     const ws = new WebSocket(`${WEBSOCKET_SERVER_URL}?userid=${jwtToken}&slug=${roomId}`);
 
     ws.onopen = () => {
-      console.log("WebSocket Connected");
       setIsConnected(true);
       ws.send(JSON.stringify({ type: "join", roomId }));
     };
 
-    ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      console.log("Message from server:", message);
-    };
+    // ws.onmessage = (event) => {
+    //   const message = JSON.parse(event.data);
+    //   console.log("Message from server:", message);
+    // };
 
     ws.onclose = () => {
       console.log("WebSocket Disconnected");

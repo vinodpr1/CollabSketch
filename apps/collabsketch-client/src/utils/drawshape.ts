@@ -4,6 +4,7 @@ import { zoom } from "./zoom-in-out";
 import { ExistingShape, Pencil } from "@/interfaces/interface";
 import { DrawEllipse, DrawLine, DrawPencil, DrawRectangle } from "./shape";
 import { getShapes } from "./db-shapes";
+import { getArrowLength } from "./getArrowLength";
 
 let existingShape: ExistingShape[] = [];
 let pencilPath: Pencil[] = [];
@@ -77,8 +78,8 @@ export const drawShape = async (
             shape,
           );
         } else {
-          selectedOffsetX = event.clientX - shape?.path[0].x;
-          selecteOffsetY = event.clientY - shape?.path[0].y;
+          selectedOffsetX = event.clientX - shape?.path[0]?.x;
+          selecteOffsetY = event.clientY - shape?.path[0]?.y;
 
           return findInterSection(
             event.clientX - rect.left,
@@ -440,7 +441,7 @@ export const drawShape = async (
           event.clientY - rect.top,
         );
 
-        const arrowLen = 10;
+        const arrowLen: number = getArrowLength(stroke);
         let dx = event.clientX - rect.left - startX;
         let dy = event.clientY - rect.top - startY;
         let angle = Math.atan2(dy, dx);

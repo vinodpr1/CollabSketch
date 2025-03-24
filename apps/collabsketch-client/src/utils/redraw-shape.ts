@@ -1,5 +1,6 @@
 import { ExistingShape } from "@/interfaces/interface";
 import { DrawEllipse, DrawLine, DrawPencil, DrawRectangle } from "./shape";
+import { getArrowLength } from "./getArrowLength";
 export const drawShapesBeforeClear = (
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
@@ -28,7 +29,7 @@ export const drawShapesBeforeClear = (
     } else if (shape.type == "arrow") {
       DrawLine(ctx, shape.startX, shape.startY, shape.moveX, shape.moveY);
 
-      const arrowLen = 10;
+      const arrowLen = getArrowLength(shape.stroke);
       let dx = shape.moveX - shape.startX;
       let dy = shape.moveY - shape.startY;
       let angle = Math.atan2(dy, dx);
