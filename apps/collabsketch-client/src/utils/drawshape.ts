@@ -338,12 +338,14 @@ export const drawShape = async (
         type: "rectangle",
         color: color,
         stroke: stroke,
+        edge: edge,
         background: backgroundColor,
         startX: startX,
         startY: startY,
         width: width,
         height: height,
       };
+      console.log("SSSSSSSSSSS", shape);
     } else if (tool === "ellipse") {
       const radius = Math.sqrt(width ** 2 + height ** 2);
       shape = {
@@ -425,7 +427,7 @@ export const drawShape = async (
       ctx.lineWidth = stroke;
 
       if (tool === "rectangle") {
-        DrawRectangle(ctx, startX, startY, width, height, backgroundColor);
+        DrawRectangle(ctx, startX, startY, width, height, edge, backgroundColor);
       } else if (tool === "ellipse") {
         DrawEllipse(ctx, startX, startY, width, height);
       } else if (tool === "line") {
@@ -511,6 +513,7 @@ export const drawShape = async (
               event.clientY - rect.top - selecteOffsetY,
               selectedShape.width,
               selectedShape.height,
+              selectedShape.edge,
               selectedShape.background
             );
       
@@ -657,6 +660,7 @@ export const drawShape = async (
               event.clientY,
               x2 - event.clientX,
               y2 - event.clientY,
+              selectedShape.edge,
               selectedShape.background
             );
 
@@ -676,6 +680,7 @@ export const drawShape = async (
               selectedShape.startY,
               event.clientX - selectedShape.startX,
               event.clientY - selectedShape.startY,
+              selectedShape.edge,
               selectedShape.background
             );
 
@@ -699,6 +704,7 @@ export const drawShape = async (
               selectedShape.startY,
               selectedShape.width,
               selectedShape.height,
+              selectedShape.edge,
               selectedShape.background
             );
           } else if (selectedShape.type == "rectangle" && TR) {
@@ -719,6 +725,7 @@ export const drawShape = async (
               selectedShape.startY,
               selectedShape.width,
               selectedShape.height,
+              selectedShape.edge,
               selectedShape.background
             );
           } else if (selectedShape.type == "ellipse") {

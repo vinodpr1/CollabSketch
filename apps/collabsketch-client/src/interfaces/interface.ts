@@ -4,6 +4,7 @@ export type ExistingShape =
       type: "rectangle";
       color: string;
       stroke: number;
+      edge: number;
       background: string;
       startX: number;
       startY: number;

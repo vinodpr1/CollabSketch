@@ -12,7 +12,7 @@ export const drawShapesBeforeClear = (
     ctx.strokeStyle = shape.color;
     ctx.lineWidth = shape.stroke;
     if (shape.type == "rectangle") {
-      DrawRectangle(ctx, shape.startX, shape.startY, shape.width, shape.height, shape.background);
+      DrawRectangle(ctx, shape.startX, shape.startY, shape.width, shape.height,shape.edge, shape.background);
     } else if (shape.type == "ellipse") {
       DrawEllipse(
         ctx,
