@@ -8,6 +8,7 @@ import { HTTP_BACKEND_URL } from "@repo/common/HTTP_BACKEND_URL";
 import axios from "axios";
 import "./global.css";
 import CustomCursor from "./CustomCursor";
+import ShareAI from "./ShareAI";
 
 interface CordsType {
   x: number;
@@ -49,6 +50,7 @@ const Canvas = ({ socket, roomid }: { socket: WebSocket; roomid: any }) => {
       {color} */}
 
       <Toolbar setTool={changeTool} tool={tool} />
+      <ShareAI />
       <Filterbar
         color={color}
         setColor={changeColor}
