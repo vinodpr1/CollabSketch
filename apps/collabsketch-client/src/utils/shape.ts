@@ -32,14 +32,21 @@ export const DrawLine = (
   ctx.closePath();
 };
 
+
 export const DrawRectangle = (
   ctx: CanvasRenderingContext2D,
   startX: number,
   startY: number,
   width: number,
   height: number,
+  backgroundColor?: string 
 ) => {
+  if(backgroundColor != "none" && backgroundColor){
+    ctx.fillStyle = backgroundColor!; 
+    ctx.fillRect(startX, startY, width, height);
+  }
   ctx.strokeRect(startX, startY, width, height);
+
 };
 
 export const DrawPencil = (ctx: CanvasRenderingContext2D, pencilPath: any) => {

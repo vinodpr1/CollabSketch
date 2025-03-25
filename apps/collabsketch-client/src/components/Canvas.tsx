@@ -20,10 +20,14 @@ const Canvas = ({ socket, roomid }: { socket: WebSocket; roomid: any }) => {
     tool,
     color,
     changeColor,
+    backgroundColor,
+    changeBackgroundColor,
     size,
     changeSize,
     stroke,
     changeStroke,
+    edge,
+    changeEdge
   } = useDraw();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -31,21 +35,31 @@ const Canvas = ({ socket, roomid }: { socket: WebSocket; roomid: any }) => {
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
-      drawShape(canvas, socket, roomid, tool, color, stroke);
+      drawShape(canvas, socket, roomid, tool, color, stroke, edge, backgroundColor);
     }
     return () => {};
-  }, [canvasRef, color, stroke, tool, socket]);
+  }, [canvasRef, color, stroke, tool, socket, backgroundColor]);
 
   return (
     <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+      
+      {/* {edge}
+      {tool}
+      {backgroundColor}
+      {color} */}
+
       <Toolbar setTool={changeTool} tool={tool} />
       <Filterbar
         color={color}
         setColor={changeColor}
+        backgroundColor={backgroundColor}
+        setBackgroundColor={changeBackgroundColor}
         size={size}
         setSize={changeSize}
         stroke={stroke}
         setStroke={changeStroke}
+        edge={edge}
+        setEdge={changeEdge}
       />
       {tool == "eraser" && <CustomCursor />}
       <canvas
