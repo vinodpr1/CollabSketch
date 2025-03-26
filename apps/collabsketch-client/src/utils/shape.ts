@@ -32,14 +32,53 @@ export const DrawLine = (
   ctx.closePath();
 };
 
+
 export const DrawRectangle = (
   ctx: CanvasRenderingContext2D,
   startX: number,
   startY: number,
   width: number,
   height: number,
+  edge: number,
+  backgroundColor?: string 
 ) => {
-  ctx.strokeRect(startX, startY, width, height);
+  
+  // if(backgroundColor != "none" && backgroundColor){
+  //   ctx.fillStyle = backgroundColor!; 
+  //   ctx.fillRect(startX, startY, width, height);
+  // }
+  // ctx.strokeRect(startX, startY, width, height);
+  // console.log("LKKKK", edge);
+
+  function drawRoundedRect(ctx:any, startX:any, startY:any, endX:any, endY:any, radius:any) {
+    let x = Math.min(startX, endX);
+    let y = Math.min(startY, endY);
+    let width = Math.abs(endX - startX);
+    let height = Math.abs(endY - startY);
+
+    ctx.beginPath();
+    ctx.moveTo(x , y+radius);
+    ctx.arc(x + radius, y + radius, radius, Math.PI, 1.5 * Math.PI);
+
+    ctx.lineTo(x + width - radius, y);
+    ctx.arc(x + width - radius, y + radius, radius, 1.5 * Math.PI, 0);
+
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.arc(x + width - radius, y + height - radius, radius, 0, 0.5 * Math.PI);
+
+    ctx.lineTo(x + radius, y + height);
+    ctx.arc(x + radius, y + height - radius, radius, 0.5 * Math.PI, Math.PI);
+    ctx.closePath();
+
+     if(backgroundColor != "none" && backgroundColor){
+        ctx.fillStyle = backgroundColor;
+        ctx.fill();
+     }
+
+    ctx.stroke();
+}
+
+  drawRoundedRect(ctx,startX, startY, width+startX, height+startY, edge*2 );
 };
 
 export const DrawPencil = (ctx: CanvasRenderingContext2D, pencilPath: any) => {
@@ -50,3 +89,56 @@ export const DrawPencil = (ctx: CanvasRenderingContext2D, pencilPath: any) => {
   }
   ctx.stroke();
 };
+
+
+
+// triangle
+
+
+// export const DrawRectangle = (
+//   ctx: CanvasRenderingContext2D,
+//   startX: number,
+//   startY: number,
+//   width: number,
+//   height: number,
+//   edge: number,
+//   backgroundColor?: string 
+// ) => {
+  
+//   // if(backgroundColor != "none" && backgroundColor){
+//   //   ctx.fillStyle = backgroundColor!; 
+//   //   ctx.fillRect(startX, startY, width, height);
+//   // }
+//   // ctx.strokeRect(startX, startY, width, height);
+//   // console.log("LKKKK", edge);
+
+//   function drawRoundedRect(ctx:any, startX:any, startY:any, endX:any, endY:any, radius:any) {
+//     let x = Math.min(startX, endX);
+//     let y = Math.min(startY, endY);
+//     let width = Math.abs(endX - startX);
+//     let height = Math.abs(endY - startY);
+
+//     ctx.beginPath();
+
+//     // Top-left corner
+//     ctx.moveTo(x , y);
+//     ctx.arc(x + radius, y + radius, radius, Math.PI, 1.5 * Math.PI);
+
+//     // Top-right corner
+//     ctx.lineTo(x + width - radius, y);
+//     ctx.arc(x + width - radius, y + radius, radius, 1.5 * Math.PI, 0);
+
+//     // Bottom-right corner
+//     // ctx.lineTo(x + width, y + height - radius);
+//     // ctx.arc(x + width - radius, y + height - radius, radius, 0, 0.5 * Math.PI);
+
+//     // Bottom-left corner
+//     ctx.lineTo(x + radius, y + height);
+//     ctx.arc(x + radius, y + height - radius, radius, 0.5 * Math.PI, Math.PI);
+
+//     ctx.closePath();
+//     ctx.stroke();
+// }
+
+//   drawRoundedRect(ctx,startX, startY, width+startX, height+startY, edge*2 );
+// };

@@ -4,6 +4,8 @@ export type ExistingShape =
       type: "rectangle";
       color: string;
       stroke: number;
+      edge: number;
+      background: string;
       startX: number;
       startY: number;
       width: number;
@@ -13,6 +15,7 @@ export type ExistingShape =
       id: number;
       type: "ellipse";
       color: string;
+      background: string;
       stroke: number;
       startX: number;
       startY: number;

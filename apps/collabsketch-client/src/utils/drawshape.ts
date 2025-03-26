@@ -22,6 +22,8 @@ export const drawShape = async (
   tool: string,
   color: string,
   stroke: number,
+  edge: number,
+  backgroundColor: string
 ) => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -92,7 +94,7 @@ export const drawShape = async (
 
       if (selectedShape) {
         document.getElementsByTagName("body")[0].style.cursor = "move";
-        console.log("Inside just selected function", selectedShape);
+        console.log("Inside just selected shape", selectedShape);
       }
 
       if (selectedShape?.type == "rectangle") {
@@ -336,11 +338,14 @@ export const drawShape = async (
         type: "rectangle",
         color: color,
         stroke: stroke,
+        edge: edge,
+        background: backgroundColor,
         startX: startX,
         startY: startY,
         width: width,
         height: height,
       };
+      console.log("SSSSSSSSSSS", shape);
     } else if (tool === "ellipse") {
       const radius = Math.sqrt(width ** 2 + height ** 2);
       shape = {
@@ -351,6 +356,7 @@ export const drawShape = async (
         startX: startX,
         startY: startY,
         radius: radius,
+        background: backgroundColor,
       };
     } else if (tool === "line") {
       shape = {
@@ -421,7 +427,7 @@ export const drawShape = async (
       ctx.lineWidth = stroke;
 
       if (tool === "rectangle") {
-        DrawRectangle(ctx, startX, startY, width, height);
+        DrawRectangle(ctx, startX, startY, width, height, edge, backgroundColor);
       } else if (tool === "ellipse") {
         DrawEllipse(ctx, startX, startY, width, height);
       } else if (tool === "line") {
@@ -476,9 +482,12 @@ export const drawShape = async (
       } else if (tool == "select") {
         if (!selectedShape) return;
 
+
         existingShape = existingShape.filter((shape) => {
           return shape.id !== selectedShape?.id;
         });
+        console.log("New Logger", existingShape);
+        
 
         if (
           !TL &&
@@ -495,16 +504,22 @@ export const drawShape = async (
           !ARRE
         ) {
           if (selectedShape.type == "rectangle") {
+           
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
-            ctx.strokeRect(
+            DrawRectangle(
+              ctx, 
               event.clientX - rect.left - selectedOffsetX,
               event.clientY - rect.top - selecteOffsetY,
               selectedShape.width,
               selectedShape.height,
+              selectedShape.edge,
+              selectedShape.background
             );
+      
             selectedShape.startX = event.clientX - rect.left - selectedOffsetX;
             selectedShape.startY = event.clientY - rect.left - selecteOffsetY;
+
           } else if (selectedShape.type == "ellipse") {
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
@@ -645,6 +660,8 @@ export const drawShape = async (
               event.clientY,
               x2 - event.clientX,
               y2 - event.clientY,
+              selectedShape.edge,
+              selectedShape.background
             );
 
             selectedShape.startX = event.clientX;
@@ -663,6 +680,8 @@ export const drawShape = async (
               selectedShape.startY,
               event.clientX - selectedShape.startX,
               event.clientY - selectedShape.startY,
+              selectedShape.edge,
+              selectedShape.background
             );
 
             selectedShape.width = event.clientX - selectedShape.startX;
@@ -685,6 +704,8 @@ export const drawShape = async (
               selectedShape.startY,
               selectedShape.width,
               selectedShape.height,
+              selectedShape.edge,
+              selectedShape.background
             );
           } else if (selectedShape.type == "rectangle" && TR) {
             const newWidth =
@@ -698,11 +719,14 @@ export const drawShape = async (
             ctx.strokeStyle = selectedShape.color;
             ctx.lineWidth = selectedShape.stroke;
 
-            ctx.strokeRect(
+            DrawRectangle(
+              ctx,
               selectedShape.startX,
               selectedShape.startY,
               selectedShape.width,
               selectedShape.height,
+              selectedShape.edge,
+              selectedShape.background
             );
           } else if (selectedShape.type == "ellipse") {
             ctx.strokeStyle = selectedShape.color;
