@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 
 import AIGenerateModal from './AIGenerateModal';
@@ -51,17 +50,3 @@ function Button() {
 }
 
 export default Button;
-=======
-import React, { ReactNode } from 'react'
-
-const Button = ({variant, title, icon}:{variant: string, title: string, icon: ReactNode}) => {
-  return (
-    <button className={`${variant=="default" ? "bg-gray-200 border text-black" : "bg-blue-600 border text-white"}  flex gap-2 items-center rounded px-2 py-1 text-sm`}>
-        <span>{icon}</span>
-        {title}
-    </button>
-  )
-}
-
-export default Button
->>>>>>> f7ebef82d6fa0f5595215cc823daa89da54e5603
