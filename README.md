@@ -1,6 +1,6 @@
 ## Demo  
 
-[![Collab Sketch Demo](https://via.placeholder.com/640x360.png?text=Click+to+Watch+Video)](https://drive.google.com/file/d/12s0vaDgapdZAbfzE1coi9fm1RQBi__Py/view)
+▶️ [Watch the Video on Google Drive](https://drive.google.com/file/d/12s0vaDgapdZAbfzE1coi9fm1RQBi__Py/view)
 
 # Collab Sketch 
 
