@@ -1,7 +1,6 @@
 ## Demo  
 
-
-<iframe src="https://drive.google.com/file/d/12s0vaDgapdZAbfzE1coi9fm1RQBi__Py/view" width="640" height="360" allow="autoplay"></iframe>
+[![Collab Sketch Demo](https://via.placeholder.com/640x360.png?text=Click+to+Watch+Video)](https://drive.google.com/file/d/12s0vaDgapdZAbfzE1coi9fm1RQBi__Py/view)
 
 # Collab Sketch 
 
