@@ -1,3 +1,7 @@
+## Demo  
+
+[![CollabSketch Video](https://drive.google.com/file/d/12s0vaDgapdZAbfzE1coi9fm1RQBi__Py/view)]
+
 
 # Collab Sketch 
 
@@ -53,4 +57,11 @@ DATABASE_URL="your_databse_url"
 
 ```bash
 npx prisma generate
+```
+
+
+- **Run Locally**
+
+```bash
+pnpm run dev
 ```
