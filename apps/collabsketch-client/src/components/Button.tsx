@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 
 import AIGenerateModal from './AIGenerateModal';
 
-function Button() {
+function Button({title}:{title:string}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   console.log(prompt);
 
   return (
     <div className="">
-    <button onClick={() => setIsModalOpen(true)} className={`bg-gray-200 border text-black flex gap-2 items-center rounded px-2 py-1 text-sm`}>
-        Gen AI
+    <button onClick={() => setIsModalOpen(true)} className={`${title=="Share"? "bg-blue-500 text-white" : "bg-gray-200 text-black"}  border  flex gap-2 items-center rounded px-2 py-1 text-sm`}>
+        {title}
     </button>
 
       <AIGenerateModal

@@ -13,7 +13,7 @@ interface User {
 let users: User[] = [];
 
 wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
-  console.log("connected to the server");
+  // console.log("connected to the server");
   const rawSlug = req?.url?.split("=")[2];
   const slug = rawSlug?.split("%20").join(" ");
 
@@ -39,7 +39,7 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
   ws.on("message", async (message: string) => {
     const data = JSON.parse(message.toString());
     if (!slug) return;
-    console.log("Shape",data);
+    // console.log("Shape",data);
     users.forEach(async (user: User) => {
       if (user.userId !== userData.id && user.rooms.includes(slug)) {
         if (user.ws.readyState === WebSocket.OPEN) {

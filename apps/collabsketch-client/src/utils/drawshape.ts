@@ -5,9 +5,13 @@ import { ExistingShape, Pencil } from "@/interfaces/interface";
 import { DrawEllipse, DrawLine, DrawPencil, DrawRectangle } from "./shape";
 import { getShapes } from "./db-shapes";
 import { getArrowLength } from "./getArrowLength";
+import { drawSelectionOutline } from "./redraw-shape";
 
 let existingShape: ExistingShape[] = [];
 let pencilPath: Pencil[] = [];
+
+// randomly defining array to store shape which clicked after shift
+let shifSelectedShape: ExistingShape[] = [];
 
 let scale = 1; // Initial scale
 let minScale = 0.5;
@@ -56,6 +60,7 @@ export const drawShape = async (
 
   // Store previous event listeners to remove them properly
   const previousListeners = (canvas as any)._eventListeners || {};
+  const previousListenersDocument = (document as any)._eventListeners || {};
 
   // Remove existing event listeners if they exist
   if (previousListeners.mousedown) {
@@ -65,11 +70,66 @@ export const drawShape = async (
     canvas.removeEventListener("wheel", previousListeners.wheel);
   }
 
-  // Define event handlers
+  if(previousListenersDocument.keydown){
+    document.removeEventListener("keydown", previousListenersDocument.keydown);
+  }
+
+  // mouse down event handler
   const handleMouseDown = (event: MouseEvent) => {
     clicked = true;
     const rect = canvas.getBoundingClientRect();
+    
+    // if tool changes then remove the selected items after shift
+    if(tool !== "select"){
+      if (shifSelectedShape.length > 0) {
+        shifSelectedShape = [];
+        drawShapesBeforeClear(ctx, canvas, existingShape); // Redraw without selection outlines
+      }
+    }
+
     if (tool == "select") {
+      // logic to delete shape after shift + select + delete
+      if(event.shiftKey){
+        // x-cord and y-cord of mouse after pressing shift
+        const currentX = event.clientX - rect.left;
+        const currentY = event.clientY - rect.top;
+
+        // now try to find the shapes that covers coordinates currentX and currentY inside it
+        const clickedShape = existingShape.find((shape) => {
+           if (shape.type != "pencil") {
+              selectedOffsetX = event.clientX - shape?.startX;
+              selecteOffsetY = event.clientY - shape?.startY;
+              return findInterSection(currentX, currentY, shape);
+           } 
+        });
+
+        if(!clickedShape){
+          return;
+        }
+
+        // checking if the shape is already in shifSelectedShape array
+        const isAlreadyExist = shifSelectedShape.some((shape)=>{
+            return shape.id===clickedShape.id;
+        })
+
+       // add shape in shifSelectedShape if it's not exixst already
+       if(!isAlreadyExist){
+         shifSelectedShape.push(clickedShape);
+         console.log("All the selected shapes", shifSelectedShape);
+
+         drawShapesBeforeClear(ctx, canvas, existingShape);
+         shifSelectedShape.forEach(shape => {
+           drawSelectionOutline(ctx, shape);
+         });
+       }
+      return;
+      }else{
+        if (shifSelectedShape.length > 0) {
+          shifSelectedShape = [];
+          drawShapesBeforeClear(ctx, canvas, existingShape); // Redraw without selection outlines
+        }
+      }
+      
       selectedShape = existingShape.find((shape) => {
         if (shape.type != "pencil") {
           selectedOffsetX = event.clientX - shape?.startX;
@@ -94,11 +154,11 @@ export const drawShape = async (
 
       if (selectedShape) {
         document.getElementsByTagName("body")[0].style.cursor = "move";
-        console.log("Inside just selected shape", selectedShape);
+        // console.log("Inside just selected shape", selectedShape);
       }
 
       if (selectedShape?.type == "rectangle") {
-        console.log("Inside just selected function extra if", selectedShape);
+        // console.log("Inside just selected function extra if", selectedShape);
         const zoneX1 = selectedShape.startX;
         const zoneY1 = selectedShape.startY;
 
@@ -345,7 +405,7 @@ export const drawShape = async (
         width: width,
         height: height,
       };
-      console.log("SSSSSSSSSSS", shape);
+      // console.log("SSSSSSSSSSS", shape);
     } else if (tool === "ellipse") {
       const radius = Math.sqrt(width ** 2 + height ** 2);
       shape = {
@@ -481,8 +541,6 @@ export const drawShape = async (
         });
       } else if (tool == "select") {
         if (!selectedShape) return;
-
-
         existingShape = existingShape.filter((shape) => {
           return shape.id !== selectedShape?.id;
         });
@@ -877,12 +935,28 @@ export const drawShape = async (
     }
   };
 
+  const keyPress = (event: any) =>{
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      //i'm filtering the selected shape from existing shape
+      if(shifSelectedShape.length>0){
+        existingShape = existingShape.filter(shape => 
+          !shifSelectedShape.some(s => s.id === shape.id)
+        );
+        // Clear the selected shape after pressing shift
+        shifSelectedShape = [];
+        // Redraw canvas after removing selected shape
+        drawShapesBeforeClear(ctx, canvas, existingShape);
+      }
+    }
+  }
+
   // Attach new event listeners
   canvas.addEventListener("mousedown", handleMouseDown);
   canvas.addEventListener("mouseup", handleMouseUp);
   canvas.addEventListener("mousemove", handleMouseMove);
   // passive - allows preventdefault to work
   canvas.addEventListener("wheel", handleZoom, { passive: false });
+  document.addEventListener("keydown", keyPress);
 
   // reference to event listeners reference
   (canvas as any)._eventListeners = {
@@ -891,4 +965,9 @@ export const drawShape = async (
     mousemove: handleMouseMove,
     wheel: handleZoom,
   };
+
+  (document as any)._eventListeners = {
+    keydown: keyPress
+  };
+
 };

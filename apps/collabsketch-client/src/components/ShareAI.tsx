@@ -6,8 +6,8 @@ const ShareAI = () => {
   return (
     <div className="fixed right-0 m-2">
       <div className="flex gap-2 p-2">
-         <Button />
-         <Button />
+         <Button title={"Gen AI"}/>
+         <Button title={"Share"}/>
       </div>
     </div>
   )

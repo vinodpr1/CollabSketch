@@ -51,3 +51,38 @@ export const drawShapesBeforeClear = (
     }
   });
 };
+
+
+
+
+
+export const drawSelectionOutline=(ctx: CanvasRenderingContext2D, shape: ExistingShape)=> {
+  ctx.save();
+  ctx.strokeStyle = '#00a8ff';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+  
+  if (shape.type === "rectangle") {
+    ctx.strokeRect(shape.startX, shape.startY, shape.width, shape.height);
+  } else if (shape.type === "ellipse") {
+    ctx.beginPath();
+    ctx.ellipse(shape.startX, shape.startY, shape.radius, shape.radius, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  } else if (shape.type === "line" || shape.type === "arrow") {
+    ctx.beginPath();
+    ctx.moveTo(shape.startX, shape.startY);
+    ctx.lineTo(shape.moveX, shape.moveY);
+    ctx.stroke();
+  } else if (shape.type === "pencil") {
+    if (shape.path.length > 0) {
+      ctx.beginPath();
+      ctx.moveTo(shape.path[0].x, shape.path[0].y);
+      for (let i = 1; i < shape.path.length; i++) {
+        ctx.lineTo(shape.path[i].x, shape.path[i].y);
+      }
+      ctx.stroke();
+    }
+  }
+  
+  ctx.restore();
+}
